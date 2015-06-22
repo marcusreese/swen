@@ -1,0 +1,14 @@
+body {
+	background: #cccccc;
+}
+.subpage {
+	background: white;
+	padding: 5px; 
+	width: 30%; 
+	height: 130px; 
+	display: inline-block;
+}
+hr {
+	width: 90%;
+	margin-left: 0;
+}
