@@ -9,3 +9,6 @@ autopublish
 insecure
 urigo:angular
 angularui:angular-ui-router
+angular:angular-mocks
+sanjo:jasmine
+velocity:html-reporter
