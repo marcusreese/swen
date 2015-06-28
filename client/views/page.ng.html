@@ -1,0 +1,28 @@
+<header>
+	<select ng-model="mode">
+		<option ng-repeat="mode in modes" value="{{mode.codeValue}}">
+			{{mode.displayValue}}
+		</option>
+	</select>
+	<span style="padding: 2px 7px; color: white; background: green;">{{msgToUser}}</span>
+	<button ng-click="status()">status</button><br><br>
+</header>
+<main>
+<div class="tree">
+        <div class="subpage">
+        <span class="post" ng-repeat="post in subpage">
+                <span ng-class="getClass(post)" ng-click="click(post)"
+                ng-hide="isEditable(post)">
+                        {{post.text}}
+                </span>
+                <div ng-class="edit" ng-show="isEditable(post)">
+                        <textarea ng-model="draft.text"></textarea>
+                        <br>
+                        <button ng-click="submit(draft, post)">ok</button>
+                        <label>url:</label>
+                        <input type="text" ng-model="newId" placeholder="{{post._id}}">
+                </div>
+        </span>
+        </div>
+</div>
+</main>
