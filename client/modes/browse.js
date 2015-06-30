@@ -14,6 +14,7 @@ getClass: function getClass(post) {
 // The args parameter for click() includes post, rootScope, scope, and maybe event.
 click: function click(args) {
 	// Record post as focus for e.g. getClass().
+	if (! args.post._id) args.post._id = "mjr/welcome";
 	focusPost = args.post;
 	args.rootScope.focus = $meteor.object(Posts, args.post._id);
 	var focus = args.rootScope.focus;
