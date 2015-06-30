@@ -2,8 +2,9 @@
 var app = angular.module("swen");
 app.controller("Controller", [	
 	"$scope", 
+	"$rootScope",
 	"modeService", 
-function($scope, modeService){
+function($scope, $rootScope, modeService){
 
         $scope.status = function() {console.log(JSON.stringify(Posts.find().fetch()));}; 
 
@@ -18,13 +19,20 @@ function($scope, modeService){
 
 	$scope.click = function click(post, $event) {
 		if ($scope.mode !== "browse" && $event) $event.preventDefault();
-		var args = {post: post, event: $event, scope: $scope};
-console.log(JSON.stringify(post));
+		if (! $event) {
+			// Initial load
+			$rootScope.loaded = true;
+		}
+		var args = {post: post, event: $event, rootScope: $rootScope, scope: $scope};
 		modeService[$scope.mode].click(args);
 	}
+
 	// Load the first page
-	var path = location.pathname.slice(1);
-	$scope.click({_id: path});
+	if (! $rootScope.loaded) {
+		var path = location.pathname.slice(1);
+		$scope.click({_id: path});
+	}
+
 
 	$scope.getClass = function getClass(post) {
 		var getClass = modeService[$scope.mode].getClass;

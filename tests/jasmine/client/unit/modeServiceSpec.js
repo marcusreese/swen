@@ -55,7 +55,7 @@ describe('modeService', function() {
 		expect(modeService.edit.isEditable({_id: "test"})).toBe(true);
 	});
 	it(".browse.click() selects a post", function () {
-		modeService.browse.click({post: {_id: "test", first: "test"}, scope: {}});
+		modeService.browse.click({post: {_id: "test", first: "test"}, rootScope: {}});
 		expect(modeService.browse.getClass({_id: "test"})).toBe("selected");
 	});
 

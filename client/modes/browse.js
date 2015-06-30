@@ -2,57 +2,27 @@
 angular.module("swen").run(["modeService", "$meteor", "$stateParams", 
 	function addBrowse(modeService, $meteor, $stateParams) { 
 		function browse () {
-			var focus = {};
+			var focusPost = {};
 			return {
 
 // Letting all returned functions start at the left margin, for readability.
 
 getClass: function getClass(post) {
-	return post._id === focus._id ? "selected" : "";
+	return post._id === focusPost._id ? "selected" : "";
 },
 
-// The args parameter for click() includes post, scope, and maybe event.
+// The args parameter for click() includes post, rootScope, scope, and maybe event.
 click: function click(args) {
 	// Record post as focus for e.g. getClass().
-	focus = args.post;
-console.log('focus.first:')
-console.log(focus.first);
-	if (focus.first) {
-		// Load the post including its context (starting with first).
-			args.scope.subpage = $meteor.collection(
-				function () {
-					return Posts.find(
-						{first: focus.first}, 
-						{sort: {rank: 1}}
-					);
-				}	
-			); // End collection (load)
-
-	}
-	// But there's no first when entering from mere url, so . . .
-	else {
-		$meteor.call('getPost', focus._id).then(
-			function(data){
-				console.log('success in getFirst', data);
-				if (data) {
-					focus = data;
-					// Try this again.
-			args.scope.subpage = $meteor.collection(
-				function () {
-					return Posts.find(
-						{first: focus.first}, 
-						{sort: {rank: 1}}
-					);
-				}	
-			); // End collection (load)
-					//args.scope.click(args);
-				}
-			},
-			function(err){
-				console.log('failed', err);
-			}
+	focusPost = args.post;
+	args.rootScope.focus = $meteor.object(Posts, args.post._id);
+	var focus = args.rootScope.focus;
+	args.rootScope.subpage = $meteor.collection(function() {
+		return Posts.find(
+			{first: focus.first}, 
+			{sort: {rank: 1}}
 		);
-	} // End of else
+	});
 } // End of click
 
 // That's all the returned functions, so leaving left margin again.
