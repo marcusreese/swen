@@ -11,16 +11,14 @@
 <div class="tree">
         <div class="subpage">
         <span class="post" ng-repeat="post in subpage">
-                <span ng-class="getClass(post)" ng-click="click(post)"
+                <a href="{{post._id}}" ng-class="getClass(post)" ng-click="click(post, $event)"
                 ng-hide="isEditable(post)">
                         {{post.text}}
-                </span>
+                </a>
                 <div ng-class="edit" ng-show="isEditable(post)">
                         <textarea ng-model="draft.text"></textarea>
                         <br>
-                        <button ng-click="submit(draft, post)">ok</button>
-                        <label>url:</label>
-                        <input type="text" ng-model="newId" placeholder="{{post._id}}">
+                        <button tabindex=0 ng-click="submit(post, $event)">Done</button>
                 </div>
         </span>
         </div>

@@ -1,25 +1,32 @@
 "use strict";
-var app = angular.module("swen");
-app.run(["modeService", function addEdit(modeService) {
-        modeService.addMode("Edit", edit);
-}]);
+angular.module("swen").run(["modeService", 
+	function addEdit(modeService) {
+		function edit() { 
+			var editable = {};
+			return {
 
-function edit() { 
-	var editableId = "";
-	return {
-		isEditable: function isEditable(post) {
-			return post._id === this.editableId;
-		},
-		click: function click(post, draft) {
-			this.editableId = post._id;
-			draft.text = post.text;
-		},
-		submit: function submit(draft, post, subpage) {
-			post.text = draft.text;
-        	        subpage.save(post);
-        	        this.editableId = "";;
-		}
-	};
+// Letting all returned functions start at the left margin, for readability.
+
+isEditable: function isEditable(post) {
+	return post._id === editable._id;
+},
+
+click: function click(args) {
+	editable = args.post;
+	args.scope.draft.text = args.post.text;
+},
+
+submit: function submit(args) {
+	args.post.text = args.scope.draft.text;
+	args.scope.subpage.save(args.post);
+	editable = {};
 }
 
+// That's all the returned functions, so leaving left margin again.
+
+			} // End of return block
+		} // End of edit function
+        	modeService.addMode("Edit", edit());
+	} // End of addEdit function
+]); // End of run function
 

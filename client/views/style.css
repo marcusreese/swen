@@ -1,6 +1,12 @@
+a {
+	text-decoration: none;
+}
 body {
 	padding: 20px 0 20px 10px;
         background: #dcdddd;
+}
+button:active, button:focus, button:hover {
+	color: green;
 }
 .selected {
 	background: lightblue;

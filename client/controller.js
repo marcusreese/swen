@@ -2,10 +2,8 @@
 var app = angular.module("swen");
 app.controller("Controller", [	
 	"$scope", 
-	"$meteor", 
-	"$stateParams", 
 	"modeService", 
-function($scope, $meteor, $stateParams, modeService){
+function($scope, modeService){
 
         $scope.status = function() {console.log(JSON.stringify(Posts.find().fetch()));}; 
 
@@ -18,25 +16,26 @@ function($scope, $meteor, $stateParams, modeService){
 	// Prepare a blank draft that can be prepared for the user.
 	$scope.draft = {text: ""};
 
-	$scope.click = function click(post) {
-		modeService[$scope.mode].click(post, $scope.draft);
+	$scope.click = function click(post, $event) {
+		if ($scope.mode !== "browse" && $event) $event.preventDefault();
+		var args = {post: post, event: $event, scope: $scope};
+console.log(JSON.stringify(post));
+		modeService[$scope.mode].click(args);
 	}
+	// Load the first page
+	var path = location.pathname.slice(1);
+	$scope.click({_id: path});
 
 	$scope.getClass = function getClass(post) {
 		var getClass = modeService[$scope.mode].getClass;
 		return getClass ? getClass(post) : "";
 	}
 
-	$scope.submit = function submit(draft, post) {
-		modeService[$scope.mode].submit(draft, post, $scope.subpage);
+	$scope.submit = function submit(post, $event) {
+		modeService[$scope.mode].submit({post: post, scope: $scope, event: $event});
 	}
 
 	$scope.msgToUser = "";
-
-        $scope.subpage = $meteor.collection(function () {
-                return Posts.find({}, {sort: {rank: 1}});
-                //return Posts.find({_id: $stateParams.username + "/" + $stateParams.slug}, {sort: {rank: 1}});
-        });
 
         // Each post uses this function to find out if it should be a textarea or not.
         $scope.isEditable = function isEditable(post) {
@@ -44,4 +43,5 @@ function($scope, $meteor, $stateParams, modeService){
                 	return modeService[$scope.mode].isEditable(post);
 		else return false;
         }
+
 }]);

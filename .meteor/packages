@@ -5,10 +5,10 @@
 # but you can also edit it by hand.
 
 meteor-platform
-autopublish
 insecure
 urigo:angular
 angularui:angular-ui-router
 angular:angular-mocks
 sanjo:jasmine
 velocity:html-reporter
+meteorhacks:fast-render

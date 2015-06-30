@@ -9,10 +9,10 @@ app.service("modeService", function ModeService() {
 	this.setCurrentMode = function setCurrent(cm) { currentMode = cm; };
 	this.getCurrentMode = function getCurrent() { return currentMode; };
 	this.getModes = function getModes() { return modes; };
-	this.addMode = function addMode(modeName, modeFunction, isDefault) {
+	this.addMode = function addMode(modeName, modeMethods, isDefault) {
 		// modeName expects e.g. "Browse" or "Edit"; spec should catch mistakes.
 		var lowercaseMode = modeName.toLowerCase().replace(/ /g, "_");
-		this[lowercaseMode] = modeFunction();
+		this[lowercaseMode] = modeMethods;
 		modes.push({codeValue: lowercaseMode, displayValue: modeName + " Mode"});
 		_.sortBy(modes, "codeValue");
 		if (isDefault) {
