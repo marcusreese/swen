@@ -52,4 +52,6 @@ function($scope, $rootScope, modeService){
 		else return false;
         }
 
+	$scope.panel = [{_id: "test1"}, {_id: "test2"}];
+
 }]);

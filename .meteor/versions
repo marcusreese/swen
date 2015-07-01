@@ -1,6 +1,9 @@
 accounts-base@1.2.0
 amplify@1.0.0
 angular:angular@1.4.0
+angular:angular-animate@1.4.0
+angular:angular-aria@1.4.0
+angular:angular-material@0.10.0
 angular:angular-mocks@1.4.0
 angularui:angular-ui-router@0.2.15
 autoupdate@1.2.1

@@ -12,3 +12,4 @@ angular:angular-mocks
 sanjo:jasmine
 velocity:html-reporter
 meteorhacks:fast-render
+angular:angular-material

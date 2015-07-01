@@ -1,3 +1,5 @@
+<div class="page">
+        <h3><a href="/">Datawebber/Deeper/Swen</a></h3>
 <header>
 	<select ng-model="mode">
 		<option ng-repeat="mode in modes" value="{{mode.codeValue}}">
@@ -8,8 +10,8 @@
 	<button ng-click="status()">status</button><br><br>
 </header>
 <main>
-<div class="tree">
-        <div class="subpage">
+<div class="panel">
+        <div class="subpage" ng-repeat="sPage in panel">
         <span class="post" ng-repeat="post in subpage">
                 <a href="{{post._id}}" ng-class="getClass(post)" ng-click="click(post, $event)"
                 ng-hide="isEditable(post)">
@@ -24,3 +26,4 @@
         </div>
 </div>
 </main>
+</div>
