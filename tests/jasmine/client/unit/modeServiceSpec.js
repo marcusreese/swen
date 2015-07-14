@@ -42,21 +42,5 @@ describe('modeService', function() {
 		expect(modeService.getModes().length).toBe(count + 1);
 		expect(typeof modeService.insert.test).toBe("function");
 	});
-	it(".edit.submit() can change the text of a post", function () {
-		var post = {text: "old text"};
-		var scope = {draft: {text: "new text"}};
-		// Use a fake subpage.
-		scope.subpage = {save: function(obj) { post.text = obj.text;}};
-		modeService.edit.submit({post: post, scope: scope}); 
-		expect(post.text).toBe("new text");
-	});
-	it(".edit.click() makes a post editable via .isEditable()", function () {
-		modeService.edit.click({post: {_id: "test"}, scope: {draft: {text: ""}}});
-		expect(modeService.edit.isEditable({_id: "test"})).toBe(true);
-	});
-	it(".browse.click() selects a post", function () {
-		modeService.browse.click({post: {_id: "test", first: "test"}, rootScope: {}});
-		expect(modeService.browse.getClass({_id: "test"})).toBe("selected");
-	});
 
 });

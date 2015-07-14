@@ -12,13 +12,16 @@ isEditable: function isEditable(post) {
 },
 
 click: function click(args) {
+	args.event.preventDefault();
 	editable = args.post;
 	args.scope.draft.text = args.post.text;
 },
 
 submit: function submit(args) {
 	args.post.text = args.scope.draft.text;
-	args.scope.subpage.save(args.post);
+	// If the following breaks due to changes in index,
+	// could try using args.scope.subpage.save(args.post).
+	args.scope.panelA[args.sIndex].save(args.post);
 	editable = {};
 }
 
@@ -30,3 +33,19 @@ submit: function submit(args) {
 	} // End of addEdit function
 ]); // End of run function
 
+/*
+// A little algorithm for temp avoiding breaking up long stuff.
+if (input.length > 200) {
+	msgToUser("large input not yet supported");
+	input = input.slice(0,300);
+}
+
+// A little algorigthm for choosing a slug.
+$scope.beforeBiggest = "";
+$scope.biggest = "";
+var newWord = "", beforeNew = "";
+if (newWord.length > biggest.length) {
+	$scope.biggest = newWord;
+	$scope.beforeBiggest = beforeNew;
+}
+*/

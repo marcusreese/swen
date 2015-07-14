@@ -18,7 +18,6 @@ function($scope, $rootScope, modeService){
 	$scope.draft = {text: ""};
 
 	$scope.click = function click(post, $event) {
-		if ($scope.mode !== "browse" && $event) $event.preventDefault();
 		if (! $event) {
 			// Initial load
 			$rootScope.loaded = true;
@@ -27,20 +26,24 @@ function($scope, $rootScope, modeService){
 		modeService[$scope.mode].click(args);
 	}
 
-	// Load the first page
-	if (! $rootScope.loaded) {
-		var path = location.pathname.slice(1);
-		$scope.click({_id: path});
-	}
+	var load = modeService[$scope.mode].load;
+	if (load) load({ scope: $scope, rootScope: $rootScope, route: location.pathname });
 
+	//$scope.$on("$locationChangeSuccess", function() { });
 
-	$scope.getClass = function getClass(post) {
+	$scope.getClass = function getClass(post, subpageIndex) {
 		var getClass = modeService[$scope.mode].getClass;
-		return getClass ? getClass(post) : "";
+		return getClass ? getClass({post: post, sIndex: subpageIndex, scope: $scope}) : "";
 	}
 
-	$scope.submit = function submit(post, $event) {
-		modeService[$scope.mode].submit({post: post, scope: $scope, event: $event});
+	$scope.submit = function submit(post, subpage, subpageIndex, $event) {
+		modeService[$scope.mode].submit({
+			post: post, 
+			subpage: subpage, 
+			sIndex: subpageIndex, 
+			scope: $scope, 
+			event: $event
+		});
 	}
 
 	$scope.msgToUser = "";
@@ -52,6 +55,9 @@ function($scope, $rootScope, modeService){
 		else return false;
         }
 
-	$scope.panel = [{_id: "test1"}, {_id: "test2"}];
+	$scope.getRoute = function getRoute(post, subpage, subpageIndex) {
+		var getRoute = modeService[$scope.mode].getRoute;
+		return getRoute ? getRoute({post: post, subpage: subpage, sIndex: subpageIndex, scope: $scope, rootScope: $rootScope}) : "";
+	}
 
 }]);
