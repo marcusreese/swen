@@ -48,8 +48,3 @@ describe('Player', function() {
   });
 });
 */
-describe('integration', function() {
-  it('should be able to pass a test', function() {
-    expect(true).toBe(true);
-  });
-});
