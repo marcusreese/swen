@@ -1,0 +1,4 @@
+https://github.com/Sanjo/meteor-jasmine/wiki/End-to-End-Tests
+(retrieved July 24, 2015) says:
+"Create a folder for your end-to-end tests in tests/jasmine/server/unit/. The end-to-end tests are executed in the server unit mode."
+And sure enough, that's the only place they make webdriver available.
