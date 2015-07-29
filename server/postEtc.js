@@ -12,6 +12,7 @@ Meteor.publish("postEtc", function (path) {
   if (first6 === "/karma") return;
   var ids = Iso.parsePath(path), a = [], packs = [];
   a = getPacks(ids);
+  if (a === undefined) return [];
   packs = a.map(function(x) {return x.post? x.post.pack : "";});
   return Posts.find({ pack: { $in: packs }});
 });

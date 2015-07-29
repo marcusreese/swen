@@ -3,13 +3,30 @@ Iso.parsePath = function(path) {
   // Remove initial slash.
   path = path.slice(1);
   // Get ids, but some may be abbreviated.
-  var ids = path.split("/"), prevPoster = "";
+  var ids = path.split("/"), poster = "", slug = "";
   // Expand abbreviated ids.
   ids = ids.map(function expand(id) {
+    //If this is the first id, id should be like poster:post
     var parts = id.split(":");
-    if (! parts[1] && ! prevPoster) throw new Error("Incorrect URL.");
-    if (parts.length > 1) prevPoster = parts[0];
-    else id = prevPoster + ":" + id;
+    // If there are indeed two parts, poster is first part. 
+    if (parts.length > 1) {
+      poster = parts[0];
+      slug = parts[1];
+    }
+    // Otherwise, this is abbreviated, relying on a previously noted poster.
+    else if (poster) {
+      slug = parts[0];
+    }
+    // Karma runs with route /karma/debug.html, so skip
+    else if (parts[0] === "karma" || parts[0] === debug.html) {
+      poster = "tester";
+      slug = "test";
+    }
+    else if (! parts[1] && ! poster) {
+      console.log("Incorrect URL segment is " + parts[0]);
+      throw new Error("Incorrect URL.");
+    }
+    id = poster + ":" + slug;
     return id;
   });
   return ids;

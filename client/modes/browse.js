@@ -97,20 +97,51 @@ I NEED A WAY OF DETERMINING THE SIZE OF THE BOXES
 
 getRoute: function getRoute(args) {
   // This is called by every displayed post to determine its href.
-  // The args param includes post and sIndex for subpageIndex
-    var   thisId = args.post._id, 
+  // The href should start with parent if possible, then post's id.
+  // The args param includes post, scope and sIndex (subpageIndex).
+    var   
+      // Post's own id for last part of route:
+      thisId = args.post._id,
+      parentId = "",
+      currentRoute = location.pathname;
+    if (args.sIndex === 1) {
+      // In second subpage, so first part of current route is parent.
+       parentId = Iso.parsePath(location.pathname)[0];
+     }
+     else if (args.sIndex === 2) {
+       // In third subpage, so second part of current route is parent.
+       parentId = Iso.parsePath(location.pathname)[1];
+     }
+             /*
+      // subpages as recorded by load():
       subpages = args.scope.subpagesA || [{},{}], 
+      // Look at the parent on screen if it exists.
       higher = args.sIndex - 1,
       subpage = subpages[higher]? subpages[higher] : {},
       parent = subpage.post? subpage.post : {},
-      parentId = parent._id || ""
-    if (! parentId && 
+      parentId = parent._id || "";
+              */
+    // If no parent on screen, this is is in first subpage,
+    // so look for any recorded history of latest parent viewed.
+    else if (! parentId && 
       oldIds.length && 
+      // Only if latest "parent" is not actually a sibling.
       oldIds[0].pack !== args.post.pack &&
-      oldIds[1].pack !== args.post.pack) {
+      // And only if latest "parent" is not actually a child?
+      oldIds[1].pack !== args.post.pack
+    ) {
       parentId = oldIds[0].focus;
     }
-    if (parentId) return "/" + parentId + "/" + thisId;
+    // Normal case for route: post links to parent and self.
+    if (parentId) {
+      // First, abbreviate if possible.
+      var parentParts = parentId.split(":"),
+        childParts = thisId.split(":"),
+        childId = thisId;
+      if (parentParts[0] === childParts[0]) childId = childParts[1];
+      return "/" + parentId + "/" + childId;
+    }
+    // If this is first subpage with no history, post just links to itself.
     else return "/" + thisId;
 }
 

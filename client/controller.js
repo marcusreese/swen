@@ -6,7 +6,7 @@ app.controller("Controller", [
   "modeService", 
 function($scope, $rootScope, modeService){
 
-        $scope.status = function() {console.log(JSON.stringify(Posts.find().fetch()));}; 
+  $scope.status = function() {console.log(JSON.stringify(Posts.find().fetch()));}; 
 
   // Get options for the drop-down menu:
   $scope.modes = modeService.getModes();
@@ -48,16 +48,18 @@ function($scope, $rootScope, modeService){
 
   $scope.msgToUser = "";
 
-        // Each post uses this function to find out if it should be a textarea or not.
-        $scope.isEditable = function isEditable(post) {
+  // Each post uses this function to find out if it should be a textarea or not (in edit mode).
+  $scope.isEditable = function isEditable(post) {
     if ($scope.mode === "edit")
-                  return modeService[$scope.mode].isEditable(post);
+      return modeService[$scope.mode].isEditable(post);
     else return false;
-        }
+  }
 
+  // Each post uses this function to determine it's href (in browse mode).
   $scope.getRoute = function getRoute(post, subpage, subpageIndex) {
+    // See if the current mode supports getRoute
     var getRoute = modeService[$scope.mode].getRoute;
-    return getRoute ? getRoute({post: post, subpage: subpage, sIndex: subpageIndex, scope: $scope, rootScope: $rootScope}) : "";
+    return getRoute ? getRoute({post: post, sIndex: subpageIndex, scope: $scope}) : "";
   }
 
 }]);
