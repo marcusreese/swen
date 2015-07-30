@@ -20,7 +20,7 @@ Iso.parsePath = function(path) {
     // Karma runs with route /karma/debug.html, so skip
     else if (parts[0] === "karma" || parts[0] === debug.html) {
       poster = "tester";
-      slug = "test";
+      slug = "testA";
     }
     else if (! parts[1] && ! poster) {
       console.log("Incorrect URL segment is " + parts[0]);

@@ -2,7 +2,7 @@
 angular.module("swen").run(["modeService", "$meteor", "$location", 
   function addBrowse(modeService, $meteor, $location) { 
     function browse () {
-      var oldIds = [];
+      var viewedParents = {};
       return {
 
 // Letting all returned functions start at the left margin, for readability.
@@ -30,12 +30,10 @@ load: function load(args) {
   args.scope.idsA = Iso.parsePath(panelDescription[0]);
   // Later, consider second half.
 
-/*
-  // Convert ids to an array of reactive docs from the db.
-  args.scope.postsA = args.scope.idsA.map(function (id) {
-    return $meteor.object(Posts, id);
-  });
-*/
+  // Save parent-child relationship for a form of back navigation.
+  viewedParents[args.scope.idsA[1]] = args.scope.idsA[0];
+  
+  // Get the parent's siblings, child's siblings, and grandchildren.
   Meteor.call("getGenerations", args.scope.idsA, function(err, data) {
     if (err) throw err;
     args.scope.subpagesA = data;
@@ -54,24 +52,54 @@ load: function load(args) {
         ) || [{text: ""}];
       }); // End of giving each subpage a reactive collection.
     } // End of looping through the focus posts for each generation.
-    var postA = args.rootScope.panelA[0][0];
-    if (! oldIds.length && postA) oldIds.push({
-      pack: postA.pack,
-      focus: args.scope.idsA[0]
-    });
-    if (postA && oldIds[0].focus !== args.scope.idsA[0]) {
-      oldIds.unshift({
-        pack: postA.pack, 
-        focus: args.scope.idsA[0]
-      });
-    }
-    if (JSON.stringify(oldIds[0]) === JSON.stringify(oldIds[2])) {
-      // A form of back navigation.
-      oldIds = oldIds.slice(2);
-    }
   }); // End of getGenerations.
-
 }, // End of load function
+
+getRoute: function getRoute(args) {
+  // This is called by every displayed post to determine its href.
+  // The href should start with parent if possible, then post's id.
+  // The args param includes post, scope and sIndex (subpageIndex).
+    var   
+      // Post's own id for last part of route:
+      thisId = args.post._id,
+      parentId = "",
+      routeIds = args.scope.idsA;
+    if (args.sIndex === 1) {
+      // In second subpage, so first part of current route is parent.
+       parentId = routeIds[0];
+     }
+     else if (args.sIndex === 2) {
+       // In third subpage, so second part of current route is parent.
+       parentId = routeIds[1];
+     }
+    // If no parent on screen, this is is in first subpage,
+    // so look for any recorded history of latest parent viewed.
+    else {
+      parentId = viewedParents[routeIds[0]];
+    }
+    // Normal case for route: post links to parent and self.
+    if (parentId) {
+      // First, abbreviate if possible (i.e., if poster is same both times).
+      var parentParts = parentId.split(":"),
+        childParts = thisId.split(":"),
+        childId = thisId;
+      // If the poster/author is the same, don't mention poster twice.
+      if (parentParts[0] === childParts[0]) childId = childParts[1];
+      return "/" + parentId + "/" + childId;
+    }
+    // If this is first subpage with no history, post just links to itself.
+    else return "/" + thisId;
+}
+
+
+// That's all the returned functions, so leaving left margin again.
+
+      } // End of return block
+    } // End of browse function
+    // Make this the default mode.
+    modeService.addMode("Browse", browse(), "default");
+  } // End of addBrowse function.
+]); // End of run function
 /*
 CASE 1:
 THE FIRST PART OF URL IS ALREADY THE FOCUS OF PANELA[0]
@@ -94,71 +122,3 @@ this means after browsing in 1, 0 was clicked, so a little reversal
 I NEED A WAY OF DETERMINING THE SIZE OF THE BOXES
 */
 
-
-getRoute: function getRoute(args) {
-  // This is called by every displayed post to determine its href.
-  // The href should start with parent if possible, then post's id.
-  // The args param includes post, scope and sIndex (subpageIndex).
-    var   
-      // Post's own id for last part of route:
-      thisId = args.post._id,
-      parentId = "",
-      currentRoute = location.pathname;
-    if (args.sIndex === 1) {
-      // In second subpage, so first part of current route is parent.
-       parentId = Iso.parsePath(location.pathname)[0];
-     }
-     else if (args.sIndex === 2) {
-       // In third subpage, so second part of current route is parent.
-       parentId = Iso.parsePath(location.pathname)[1];
-     }
-             /*
-      // subpages as recorded by load():
-      subpages = args.scope.subpagesA || [{},{}], 
-      // Look at the parent on screen if it exists.
-      higher = args.sIndex - 1,
-      subpage = subpages[higher]? subpages[higher] : {},
-      parent = subpage.post? subpage.post : {},
-      parentId = parent._id || "";
-              */
-    // If no parent on screen, this is is in first subpage,
-    // so look for any recorded history of latest parent viewed.
-    else if (! parentId && 
-      oldIds.length && 
-      // Only if latest "parent" is not actually a sibling.
-      oldIds[0].pack !== args.post.pack &&
-      // And only if latest "parent" is not actually a child?
-      oldIds[1].pack !== args.post.pack
-    ) {
-      parentId = oldIds[0].focus;
-    }
-    // Normal case for route: post links to parent and self.
-    if (parentId) {
-      // First, abbreviate if possible.
-      var parentParts = parentId.split(":"),
-        childParts = thisId.split(":"),
-        childId = thisId;
-      if (parentParts[0] === childParts[0]) childId = childParts[1];
-      return "/" + parentId + "/" + childId;
-    }
-    // If this is first subpage with no history, post just links to itself.
-    else return "/" + thisId;
-}
-
-
-// That's all the returned functions, so leaving left margin again.
-
-                        } // End of return block
-    } // End of browse function
-
-    // Make this the default mode.
-    modeService.addMode("Browse", browse(), "default");
-  } // End of addBrowse function.
-]); // End of run function
-/*
-                if ($stateParams.username1 = "karma") {
-                        // Karma reruns my controller and changes username1 only, so change it back?
-                        $stateParams.username1 = "mjr";
-                }
-
-*/

@@ -12,8 +12,8 @@
 <main>
 <div class="panel" layout="column" layout-fill>
 	<md-whiteframe class="md-whiteframe-z1 subpage" layout layout-align="center center"
-        ng-repeat="subpage in panelA"><!--div class="subpage"--> 
-        <span class="post" ng-repeat="post in subpage">
+        ng-repeat="subpage in panelA" ng-attr-id="{{'A' + $index}}"> 
+        <span class="post" ng-repeat="post in subpage" ng-attr-id="{{'A'+$parent.$index+'_'+post._id}}">
                 <a my-href="getRoute(post, subpage, $parent.$index)" ng-class="getClass(post, $parent.$index)" ng-click="click(post, $event)"
                 ng-hide="isEditable(post)">
                         {{post.text}}
