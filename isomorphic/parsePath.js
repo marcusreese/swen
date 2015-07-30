@@ -2,6 +2,8 @@
 Iso.parsePath = function(path) {
   // Remove initial slash.
   path = path.slice(1);
+  // If final slash, remove that too.
+  if (path[path.length-1] === "/") path = path.slice(0, -1);
   // Get ids, but some may be abbreviated.
   var ids = path.split("/"), poster = "", slug = "";
   // Expand abbreviated ids.
@@ -18,7 +20,7 @@ Iso.parsePath = function(path) {
       slug = parts[0];
     }
     // Karma runs with route /karma/debug.html, so skip
-    else if (parts[0] === "karma" || parts[0] === debug.html) {
+    else if (parts[0] === "karma" || parts[0] === "debug.html") {
       poster = "tester";
       slug = "testA";
     }

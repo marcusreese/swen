@@ -23,7 +23,20 @@ submit: function submit(args) {
   // could try using args.scope.subpage.save(args.post).
   args.scope.panelA[args.sIndex].save(args.post);
   editable = {};
+},
+
+sibling: function sibling(args) {
+  this.submit(args);
+},
+
+child: function child(args) {
+  this.submit(args);
+},
+
+cancel: function cancel(args) {
+  editable = {};
 }
+
 
 // That's all the returned functions, so leaving left margin again.
 

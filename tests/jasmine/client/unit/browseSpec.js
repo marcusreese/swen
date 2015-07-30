@@ -56,8 +56,6 @@ describe("In browse mode,", function() {
   });
   it("a post is a link to the last viewed parent.", function () {
     // i.e., getRoute() and load() work together.
-    // Simulate loading /mjr:b/bc and then /mjr:bc/bcb
-    // Then see if bc remembers its parent (i.e. if bc has an href)
     var scope = {};
     // args1 is args for load(), args2 is args for getRoute()
     var args1 = {scope: scope}, args2 = {scope: scope};

@@ -36,8 +36,8 @@ function($scope, $rootScope, modeService){
     return getClass ? getClass({post: post, sIndex: subpageIndex, scope: $scope}) : "";
   }
 
-  $scope.submit = function submit(post, subpage, subpageIndex, $event) {
-    modeService[$scope.mode].submit({
+  $scope.button = function button(post, subpage, subpageIndex, $event, action) {
+    modeService[$scope.mode][action]({
       post: post, 
       subpage: subpage, 
       sIndex: subpageIndex, 

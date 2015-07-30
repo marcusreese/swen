@@ -1,30 +1,41 @@
 <div class="page">
-        <h3><a href="/">Datawebber/Swen</a></h3>
-<header>
-	<select ng-model="mode">
-		<option ng-repeat="mode in modes" value="{{mode.codeValue}}">
-			{{mode.displayValue}}
-		</option>
-	</select>
-	<span style="padding: 2px 7px; color: white; background: green;">{{msgToUser}}</span>
-	<button ng-click="status()">status</button><br><br>
-</header>
+  <h3><a href="/">Datawebber/Swen</a></h3>
+  <header>
+    <select ng-model="mode">
+      <option ng-repeat="mode in modes" value="{{mode.codeValue}}">
+        {{mode.displayValue}}
+      </option>
+    </select>
+    <span style="padding: 2px 7px; color: white; background: green;">{{msgToUser}}</span>
+    <button ng-click="status()">status</button><br><br>
+  </header>
 <main>
 <div class="panel" layout="column" layout-fill>
-	<md-whiteframe class="md-whiteframe-z1 subpage" layout layout-align="center center"
-        ng-repeat="subpage in panelA" ng-attr-id="{{'A' + $index}}"> 
-        <span class="post" ng-repeat="post in subpage" ng-attr-id="{{'A'+$parent.$index+'_'+post._id}}">
-                <a my-href="getRoute(post, subpage, $parent.$index)" ng-class="getClass(post, $parent.$index)" ng-click="click(post, $event)"
-                ng-hide="isEditable(post)">
-                        {{post.text}}
-                </a>
-                <div ng-class="edit" ng-show="isEditable(post)">
-                        <textarea ng-model="draft.text"></textarea>
-                        <br>
-                        <button tabindex=0 ng-click="submit(post, subpage, $parent.$index, $event)">Done</button>
-                </div>
-        </span>
-        </md-whiteframe>
+  <md-whiteframe class="md-whiteframe-z1 subpage" 
+    ng-repeat="subpage in panelA" 
+    ng-attr-id="{{'A' + $index}}"> 
+    <span class="post" 
+      ng-repeat="post in subpage" 
+      ng-attr-id="{{'A'+$parent.$index+'_'+post._id}}">
+        <a my-href="getRoute(post, subpage, $parent.$index)" 
+          ng-class="getClass(post, $parent.$index)" 
+          ng-click="click(post, $event)"
+          ng-hide="isEditable(post)">
+            {{post.text}}
+        </a>
+        <div ng-class="edit" 
+          ng-show="isEditable(post)">
+            <textarea ng-model="draft.text"></textarea>
+            <br>
+            <button tabindex=0 
+              ng-click="button(post, subpage, $parent.$index, $event, 'sibling')">
+                {And} Sibling
+            </button>
+            <button tabindex=0 ng-click="button(post, subpage, $parent.$index, $event, 'child')">{No,} Child</button>
+            <button tabindex=0 ng-click="button(post, subpage, $parent.$index, $event, 'cancel')">Cancel</button>
+        </div>
+    </span>
+  </md-whiteframe>
 </div>
 </main>
 </div>
