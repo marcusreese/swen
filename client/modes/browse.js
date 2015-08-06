@@ -63,35 +63,41 @@ getRoute: function getRoute(args) {
   // The href should start with parent if possible, then post's id.
   // The args param includes post, scope and sIndex (subpageIndex).
   var   
-    // Post's own id for last part of route:
+    // Post's own id for last part of href route:
     thisId = args.post._id,
+    // Parent id for middle part of href route:
     parentId = "",
+    // Ids from current route:
     routeIds = args.scope.idsA;
+  // Deal differently with hrefs in different subpages.
+  // (sIndex is short for subpageIndex.)
   if (args.sIndex === 1) {
-    // In second subpage, so first part of current route is parent.
-     parentId = routeIds[0];
-   }
-   else if (args.sIndex === 2) {
-     // In third subpage, so second part of current route is parent.
-     parentId = routeIds[1];
-   }
-  // If no parent on screen, this is is in first subpage,
-  // so look for any recorded history of latest parent viewed.
+    // In second subpage, so first part(s) of current route is parent.
+    parentId = routeIds[0];
+  }
+  else if (args.sIndex === 2) {
+    // In third subpage, so last part(s) of current route is parent.
+    parentId = routeIds[1];
+  }
   else {
+    // No parent on screen as this is is in first subpage,
+    // so look for any recorded history of latest parent viewed.
     parentId = viewedParents[routeIds[0]];
+    // If still no parentId, create a blank.
+    if (! parentId) parentId = "";
   }
-  // Normal case for route: post links to parent and self.
-  if (parentId) {
-    // First, abbreviate if possible (i.e., if poster is same both times).
-    var parentParts = parentId.split(":"),
-      childParts = thisId.split(":"),
-      childId = thisId;
-    // If the poster/author is the same, don't mention poster twice.
-    if (parentParts[0] === childParts[0]) childId = childParts[1];
-    return "/" + parentId + "/" + childId;
-  }
-  // If this is first subpage with no history, post just links to itself.
-  else return "/" + thisId;
+  // Add slashes between poster and slug to make url more conventional.
+  var parentParts = parentId.split(":"),
+    childParts = thisId.split(":"),
+    parentSection = parentParts.join(":/"),
+    childSection = childParts.join(":/");
+  // If the poster/author is the same, don't mention poster twice.
+  if (parentParts[0] === childParts[0]) 
+    childSection = childParts[1];
+  if (parentId)
+    return "/" + parentSection + "/" + childSection;
+  else
+    return "/" + childSection;
 }
 
 

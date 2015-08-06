@@ -13,7 +13,7 @@ describe("In browse mode,", function() {
     var args1 = {scope: scope}, args2 = {scope: scope};
     args1.rootScope = {};
     // The following url says that tester wrote test and testB, and they both are on page
-    args1.route = "/tester:testA/testB";
+    args1.route = "/tester:/testA/testB";
     // In first subpage, test wants to know if it is selected
     args2.sIndex = 0;
     args2.post = {_id: "tester:testA"};
@@ -38,7 +38,7 @@ describe("In browse mode,", function() {
     // args1 is args for load(), args2 is args for getRoute()
     var args1 = {scope: scope}, args2 = {scope: scope};
     args1.rootScope = {};
-    args1.route = "/tester:testA/testB";
+    args1.route = "/tester:/testA/testB";
     // Load fake page.
     modeService.browse.load(args1);
     // Now I'll pretend to be a post in first subpage.
@@ -47,12 +47,12 @@ describe("In browse mode,", function() {
     // I call getRoute to see what my href should be.
     var currentRoute = modeService.browse.getRoute(args2);
     // Since there is no recently viewed parent, I'm just a link to myself.
-    expect(currentRoute).toBe("/tester:testA");
+    expect(currentRoute).toBe("/tester:/testA");
     // Now I'll pretend to be a post in second subpage.
     args2.sIndex = 1;
     args2.post._id = "tester:testB";
     currentRoute = modeService.browse.getRoute(args2);
-    expect(currentRoute).toBe("/tester:testA/testB");
+    expect(currentRoute).toBe("/tester:/testA/testB");
   });
   it("a post is a link to the last viewed parent.", function () {
     // i.e., getRoute() and load() work together.
@@ -60,17 +60,17 @@ describe("In browse mode,", function() {
     // args1 is args for load(), args2 is args for getRoute()
     var args1 = {scope: scope}, args2 = {scope: scope};
     args1.rootScope = {};
-    args1.route = "/tester:testA/testB";
+    args1.route = "/tester:/testA/testB";
     // Load fake parent and child.
     modeService.browse.load(args1);
     // Navigate to child and grandchild.
-    args1.route = "/tester:testB/testC";
+    args1.route = "/tester:/testB/testC";
     modeService.browse.load(args1);
     // Now href for testB should include reference to testA.
     args2.sIndex = 0;
     args2.post = {_id: "tester:testB"};
     // I call getRoute to see what my href should be.
     var currentRoute = modeService.browse.getRoute(args2);
-    expect(currentRoute).toBe("/tester:testA/testB");
+    expect(currentRoute).toBe("/tester:/testA/testB");
   });
 });

@@ -6,10 +6,11 @@ Meteor.publish("postEtc", function (path) {
   check(path, String);
   // For testing /?jasmine...
   path = path.split("?")[0];
-  if (path === "/") path = "/mjr:welcome";
+  // "/" will be redirected.
+  if (path === "/") return [];
   // For testing /karma...
   var first6 = path.slice(0,6);
-  if (first6 === "/karma") return;
+  if (first6 === "/karma") return [];
   var ids = Iso.parsePath(path), a = [], packs = [];
   a = getPacks(ids);
   if (a === undefined) return [];
