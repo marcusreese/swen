@@ -1,5 +1,6 @@
 a {
   text-decoration: none;
+  color: black;
 }
 body {
 /*  background: #dcdddd;*/
@@ -8,6 +9,12 @@ body {
 }
 button:active, button:focus, button:hover {
   color: green;
+}
+.edit {
+  display: block;
+}
+.include {
+  display: inline-block;
 }
 main {
 }
@@ -28,8 +35,8 @@ select {
   font-size: 100%;
 }
 .selected {
-  background: lightblue;
-  background: linear-gradient(white, lightblue, lightblue, white);
+  background: lightcyan;
+  background: linear-gradient(white, lightcyan, lightcyan, white);
 }
 .subpage {
   background: white;
@@ -42,4 +49,8 @@ select {
   border-radius: 3px;
   shadow-right: 10px;
 */
+}
+textarea {
+  width: 100%;
+  margin-bottom: 3px;
 }

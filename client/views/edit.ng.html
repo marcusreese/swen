@@ -1,0 +1,24 @@
+<div class="edit" 
+  ng-show="isShowable(post, subpage)"
+  ng-attr-id="{{'0_' + $parent.$parent.$index + '_' + post._id + '_form'}}">
+    <textarea 
+      ng-attr-id="{{'0_' + $parent.$parent.$index + '_' + post._id + '_textarea'}}" 
+      ng-model="draft.text"
+    ></textarea>
+    <br>
+    <button tabindex=0 
+      ng-click="button(post, subpage, $event, $parent.$parent.$index, 'sibling')">
+        + Sibling
+    </button>
+    <button
+      tabindex=0
+      ng-click="button(post, subpage, $event, $parent.$parent.$index, 'child')">
+        + Child
+    </button>
+    <button
+      tabindex=0 
+      ng-click="button(post, subpage, $event, $parent.$parent.$index, 'cancel')">
+        Cancel
+    </button>
+    id: <input type=text ng-model="draft.id" />
+</div>

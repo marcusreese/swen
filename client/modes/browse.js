@@ -36,22 +36,25 @@ load: function load(args) {
   // Get the parent's siblings, child's siblings, and grandchildren.
   Meteor.call("getGenerations", args.scope.idsA, function(err, data) {
     if (err) throw err;
-    args.scope.subpagesA = data;
+    args.scope.fociInA = data;
     args.rootScope.panelA = args.rootScope.panelA || [{}];
     // Look at the focus post for each generation.
     // Load each subpage with its generation's pack (near siblings).
-    for (var i in args.scope.subpagesA) {
+    for (var i in args.scope.fociInA) {
       args.rootScope.panelA[i] = $meteor.collection(function() {
-        var subpage = args.scope.subpagesA[i];
-        var thePost = subpage? subpage.post : "";
-        var thePack = thePost? thePost.pack : "";
+        var theSubpage = args.scope.fociInA[i],
+            thePost = theSubpage? theSubpage.post : "",
+            thePack = thePost? thePost.pack : "";
+        // Load a reactive pack of siblings in the subpage.
         return Posts.find(
           { pack: thePack },
           // Sort them by their negative ranks.
           { sort: { rank: -1 }}
-        ) || [{text: ""}];
+        ) || [{text: "placeholder"}];
       }); // End of giving each subpage a reactive collection.
     } // End of looping through the focus posts for each generation.
+    // Allow decorator modules to build on this load function.
+    if (args.callback) args.callback(args);
   }); // End of getGenerations.
 }, // End of load function
 
@@ -59,36 +62,36 @@ getRoute: function getRoute(args) {
   // This is called by every displayed post to determine its href.
   // The href should start with parent if possible, then post's id.
   // The args param includes post, scope and sIndex (subpageIndex).
-    var   
-      // Post's own id for last part of route:
-      thisId = args.post._id,
-      parentId = "",
-      routeIds = args.scope.idsA;
-    if (args.sIndex === 1) {
-      // In second subpage, so first part of current route is parent.
-       parentId = routeIds[0];
-     }
-     else if (args.sIndex === 2) {
-       // In third subpage, so second part of current route is parent.
-       parentId = routeIds[1];
-     }
-    // If no parent on screen, this is is in first subpage,
-    // so look for any recorded history of latest parent viewed.
-    else {
-      parentId = viewedParents[routeIds[0]];
-    }
-    // Normal case for route: post links to parent and self.
-    if (parentId) {
-      // First, abbreviate if possible (i.e., if poster is same both times).
-      var parentParts = parentId.split(":"),
-        childParts = thisId.split(":"),
-        childId = thisId;
-      // If the poster/author is the same, don't mention poster twice.
-      if (parentParts[0] === childParts[0]) childId = childParts[1];
-      return "/" + parentId + "/" + childId;
-    }
-    // If this is first subpage with no history, post just links to itself.
-    else return "/" + thisId;
+  var   
+    // Post's own id for last part of route:
+    thisId = args.post._id,
+    parentId = "",
+    routeIds = args.scope.idsA;
+  if (args.sIndex === 1) {
+    // In second subpage, so first part of current route is parent.
+     parentId = routeIds[0];
+   }
+   else if (args.sIndex === 2) {
+     // In third subpage, so second part of current route is parent.
+     parentId = routeIds[1];
+   }
+  // If no parent on screen, this is is in first subpage,
+  // so look for any recorded history of latest parent viewed.
+  else {
+    parentId = viewedParents[routeIds[0]];
+  }
+  // Normal case for route: post links to parent and self.
+  if (parentId) {
+    // First, abbreviate if possible (i.e., if poster is same both times).
+    var parentParts = parentId.split(":"),
+      childParts = thisId.split(":"),
+      childId = thisId;
+    // If the poster/author is the same, don't mention poster twice.
+    if (parentParts[0] === childParts[0]) childId = childParts[1];
+    return "/" + parentId + "/" + childId;
+  }
+  // If this is first subpage with no history, post just links to itself.
+  else return "/" + thisId;
 }
 
 

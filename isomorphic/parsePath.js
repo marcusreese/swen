@@ -1,5 +1,5 @@
 // Take a url path and return an array of post ids.
-Iso.parsePath = function(path) {
+Iso.parsePath = function parsePath(path) {
   // Remove initial slash.
   path = path.slice(1);
   // If final slash, remove that too.

@@ -17,32 +17,31 @@ function($scope, $rootScope, modeService){
   // Prepare a blank draft that can be prepared for the user.
   $scope.draft = {text: ""};
 
-  $scope.click = function click(post, $event) {
+  $scope.click = function click(post, $event, subpageIndex) {
     if (! $event) {
       // Initial load
       $rootScope.loaded = true;
     }
-    var args = {post: post, event: $event, rootScope: $rootScope, scope: $scope};
+    var args = {post: post, event: $event, rootScope: $rootScope, scope: $scope, subpageIndex: subpageIndex};
     modeService[$scope.mode].click(args);
   }
 
   var load = modeService[$scope.mode].load;
   if (load) load({ scope: $scope, rootScope: $rootScope, route: location.pathname });
 
-  //$scope.$on("$locationChangeSuccess", function() { });
-
   $scope.getClass = function getClass(post, subpageIndex) {
     var getClass = modeService[$scope.mode].getClass;
     return getClass ? getClass({post: post, sIndex: subpageIndex, scope: $scope}) : "";
   }
 
-  $scope.button = function button(post, subpage, subpageIndex, $event, action) {
+  $scope.button = function button(post, subpage, $event, subpageIndex, action) {
     modeService[$scope.mode][action]({
       post: post, 
       subpage: subpage, 
-      sIndex: subpageIndex, 
       scope: $scope, 
-      event: $event
+      event: $event,
+      subpageIndex: subpageIndex,
+      rootScope: $rootScope
     });
   }
 
@@ -54,8 +53,14 @@ function($scope, $rootScope, modeService){
       return modeService[$scope.mode].isEditable(post);
     else return false;
   }
+  
+  // Each form uses this to find out if it should display or not.
+  $scope.isShowable = function isShowable(post, subpage) {
+    var isShowable = modeService[$scope.mode].isShowable;
+    return isShowable ? isShowable(post, subpage) : "";
+  }
 
-  // Each post uses this function to determine it's href (in browse mode).
+  // Each post uses this function to determine it's href.
   $scope.getRoute = function getRoute(post, subpage, subpageIndex) {
     // See if the current mode supports getRoute
     var getRoute = modeService[$scope.mode].getRoute;

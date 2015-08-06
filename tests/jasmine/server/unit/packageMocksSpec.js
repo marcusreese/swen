@@ -7086,7 +7086,7 @@ var packageMetadata = {
                 },
                 "version": {
                   "type": "constant",
-                  "value": "fd45613439e5443d4c550589e8667160b791b85f"
+                  "value": "b59d5977c170065dc806e71ad2430afc8264aed4"
                 },
                 "PUBLIC_SETTINGS": {
                   "type": "undefined"
@@ -7210,7 +7210,7 @@ var packageMetadata = {
             },
             "connections": {
               "type": "constant",
-              "value": 0
+              "value": 1
             },
             "timeout": {
               "type": "constant",
@@ -7854,11 +7854,11 @@ var packageMetadata = {
       "members": {
         "autoupdateVersion": {
           "type": "constant",
-          "value": "f078c351dcca4bef61a3d5d607fabe3710f32879"
+          "value": "bb1d66c5ed0e9708a01cd4cb6b656d316385933d"
         },
         "autoupdateVersionRefreshable": {
           "type": "constant",
-          "value": "ea99c19d4af7ac5a8c32052876b91bd104757d36"
+          "value": "41e60398aabdf55b73ef1fd86aafde265ece5654"
         },
         "autoupdateVersionCordova": {
           "type": "constant",
@@ -8728,7 +8728,7 @@ var packageMetadata = {
                 },
                 "pid": {
                   "type": "constant",
-                  "value": 17009
+                  "value": 53539
                 },
                 "getTaskName": {
                   "type": "function"
@@ -9016,6 +9016,7 @@ var packageMetadata = {
     }
   },
   "angular:angular-material": {},
+  "planettraining:material-design-icons": {},
   "session": {},
   "service-configuration": {
     "ServiceConfiguration": {

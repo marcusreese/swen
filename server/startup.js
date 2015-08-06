@@ -9,12 +9,10 @@ Meteor.startup(function () {
         rank: -10,
         when: Date.now(),
         //child: "",
-        sibs: 2,
         pack: "mjr:welcome",
         //prev: "",
         //next: "",
         //love: 0,
-        //allowed: [],
       }, 
       {
         _id: "mjr:b", 
@@ -27,7 +25,6 @@ Meteor.startup(function () {
         //prev: "",
         //next: "",
         //love: 0,
-        //allowed: [],
       }, 
       {
         _id: "mjr:c", 
@@ -40,7 +37,6 @@ Meteor.startup(function () {
         //prev: "",
         //next: "",
         //love: 0,
-        //allowed: [],
       }, 
       {
         _id: "mjr:ba", 
@@ -48,12 +44,10 @@ Meteor.startup(function () {
         rank: -10,
         when: Date.now(),
         //child: "",
-        sibs: 2,
         pack: "mjr:ba",
         //prev: "",
         //next: "",
         //love: 0,
-        //allowed: [],
       }, 
       {
         _id: "mjr:bb", 
@@ -66,7 +60,6 @@ Meteor.startup(function () {
         //prev: "",
         //next: "",
         //love: 0,
-        //allowed: [],
       }, 
       {
         _id: "mjr:bc", 
@@ -79,7 +72,6 @@ Meteor.startup(function () {
         //prev: "",
         //next: "",
         //love: 0,
-        //allowed: [],
       }, 
       {
         _id: "mjr:bcb", 
@@ -87,12 +79,10 @@ Meteor.startup(function () {
         rank: -10,
         when: Date.now(),
         //child: "",
-        sibs: 0,
         pack: "mjr:bcb",
         //prev: "",
         //next: "",
         //love: 0,
-        //allowed: [],
       }, 
 
     ];

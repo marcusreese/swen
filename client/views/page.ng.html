@@ -1,40 +1,32 @@
 <div class="page">
-  <h3><a href="/">Datawebber/Swen</a></h3>
-  <header>
-    <select ng-model="mode">
-      <option ng-repeat="mode in modes" value="{{mode.codeValue}}">
+  <header layout="row" layout-sm="column" layout-align="space-around center">
+    <h3><a href="/">Datawebber/Swen</a></h3>
+    <md-select ng-model="mode">
+      <md-option ng-repeat="mode in modes" value="{{mode.codeValue}}">
         {{mode.displayValue}}
-      </option>
-    </select>
-    <span style="padding: 2px 7px; color: white; background: green;">{{msgToUser}}</span>
-    <button ng-click="status()">status</button><br><br>
+      </md-option>
+    </md-select>
   </header>
+  <div>{{msgToUser}}</div>
+  <!--button ng-click="status()">status</button-->
 <main>
 <div class="panel" layout="column" layout-fill>
   <md-whiteframe class="md-whiteframe-z1 subpage" 
     ng-repeat="subpage in panelA" 
-    ng-attr-id="{{'A' + $index}}"> 
-    <span class="post" 
-      ng-repeat="post in subpage" 
-      ng-attr-id="{{'A'+$parent.$index+'_'+post._id}}">
-        <a my-href="getRoute(post, subpage, $parent.$index)" 
-          ng-class="getClass(post, $parent.$index)" 
-          ng-click="click(post, $event)"
-          ng-hide="isEditable(post)">
-            {{post.text}}
-        </a>
-        <div ng-class="edit" 
-          ng-show="isEditable(post)">
-            <textarea ng-model="draft.text"></textarea>
-            <br>
-            <button tabindex=0 
-              ng-click="button(post, subpage, $parent.$index, $event, 'sibling')">
-                {And} Sibling
-            </button>
-            <button tabindex=0 ng-click="button(post, subpage, $parent.$index, $event, 'child')">{No,} Child</button>
-            <button tabindex=0 ng-click="button(post, subpage, $parent.$index, $event, 'cancel')">Cancel</button>
-        </div>
-    </span>
+    ng-attr-id="{{'0_' + $index}}"> 
+      <div class="include" ng-include="'client/views/edit.ng.html'"></div>
+      <span class="post" 
+        ng-repeat="post in subpage" 
+        ng-attr-id="{{'0_' + $parent.$index + '_' + $index}}">
+          <a my-href="getRoute(post, subpage, $parent.$index)" 
+            ng-class="getClass(post, $parent.$index)" 
+            ng-click="click(post, $event, $parent.$index)"
+            ng-hide="isEditable(post)"
+            ng-attr-id="{{'0_' + $parent.$index + '_' + post._id + '_a'}}">
+              {{post.text}}
+          </a>
+          <div class="include" ng-include="'client/views/edit.ng.html'"></div>
+      </span>
   </md-whiteframe>
 </div>
 </main>

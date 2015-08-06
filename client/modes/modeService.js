@@ -7,7 +7,8 @@ var app = angular.module("swen");
 app.service("modeService", function ModeService() {
   var currentMode = "", modes = [];
   this.setCurrentMode = function setCurrent(cm) { currentMode = cm; };
-  this.getCurrentMode = function getCurrent() { return currentMode; };
+  this.getCurrentMode = function getCurrent() {
+    return currentMode; };
   this.getModes = function getModes() { return modes; };
   this.addMode = function addMode(modeName, modeMethods, isDefault) {
     // modeName expects e.g. "Browse" or "Edit"; spec should catch mistakes.

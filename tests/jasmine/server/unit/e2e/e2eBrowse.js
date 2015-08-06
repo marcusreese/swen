@@ -1,3 +1,6 @@
+// /tests/jasmine/unit/e2e/e2eBrowse.js
+// This directory path is required by as of July 2015
+"use strict";
 beforeAll(function (done) {
   var self = this;
   wdio.getGhostDriver(function (browser) {
@@ -19,14 +22,14 @@ describe('The home page', function() {
   });
 
 
-  it('should have at least two subpages', function(done) {
+  it('should have at least three subpages', function(done) {
     this.browser
-    // Wait for most of page to be loaded
-    .waitForExist("#jasmine-mirror", 1000)
-    .elements(".subpage", function(err, res) {
-      expect(err).toBeFalsy();
-      expect(res.value.length).not.toBeLessThan(2);
+    // Wait one second for third subpage to load
+    .waitForExist("#0_2", 1000)
+    .then(function (success) {
+      expect(success).toBe(true);
     })
+    .end()
     .call(done);
   });
 
