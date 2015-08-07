@@ -8,7 +8,18 @@ angular.module("swen").run(["modeService", "$meteor", "$location",
 // Letting all returned functions start at the left margin, for readability.
 
 getClass: function getClass(args) {
-  return args.post._id === args.scope.idsA[args.sIndex] ? "selected" : "";
+  // Every post uses this to see if it is highlighted or not.
+  // But there's no point in selecting any until the
+  // focus posts are known.
+  if (! args.scope.fociInA) return "";
+  // Focus posts are highlighted to show that they are the
+  // parents of the visible children.
+  var focus = args.post._id === args.scope.fociInA[args.sIndex]._id;
+  // There's no real focus in the last subpage (sIndex: 2)
+  // because focus means the children are visible,
+  // and that's impossible for the last subpage.
+  if (args.sIndex > 1) focus = false;
+  return focus ? "selected" : "";
 },
 
 // The args parameter for click() includes post, rootScope, scope, and maybe event.
@@ -31,10 +42,11 @@ load: function load(args) {
   // Later, consider second half.
 
   // Save parent-child relationship for a form of back navigation.
-  viewedParents[args.scope.idsA[1]] = args.scope.idsA[0];
+  if (args.scope.idsA[1])
+    viewedParents[args.scope.idsA[1]] = args.scope.idsA[0];
   
   // Get the parent's siblings, child's siblings, and grandchildren.
-  Meteor.call("getGenerations", args.scope.idsA, function(err, data) {
+  Meteor.call("getFoci", args.scope.idsA, function(err, data) {
     if (err) throw err;
     args.scope.fociInA = data;
     args.rootScope.panelA = args.rootScope.panelA || [{}];
@@ -42,20 +54,18 @@ load: function load(args) {
     // Load each subpage with its generation's pack (near siblings).
     for (var i in args.scope.fociInA) {
       args.rootScope.panelA[i] = $meteor.collection(function() {
-        var theSubpage = args.scope.fociInA[i],
-            thePost = theSubpage? theSubpage.post : "",
-            thePack = thePost? thePost.pack : "";
+        var pack = args.scope.fociInA[i].pack;
         // Load a reactive pack of siblings in the subpage.
         return Posts.find(
-          { pack: thePack },
+          { pack: pack },
           // Sort them by their negative ranks.
           { sort: { rank: -1 }}
-        ) || [{text: "placeholder"}];
-      }); // End of giving each subpage a reactive collection.
+        ); // End of what's returned to $meteor.collection;
+      }); // End of giving a subpage its reactive collection.
     } // End of looping through the focus posts for each generation.
     // Allow decorator modules to build on this load function.
     if (args.callback) args.callback(args);
-  }); // End of getGenerations.
+  }); // End of getFoci call
 }, // End of load function
 
 getRoute: function getRoute(args) {
@@ -73,18 +83,16 @@ getRoute: function getRoute(args) {
   // (sIndex is short for subpageIndex.)
   if (args.sIndex === 1) {
     // In second subpage, so first part(s) of current route is parent.
-    parentId = routeIds[0];
+    parentId = routeIds[1] ? routeIds[0] : "";
   }
   else if (args.sIndex === 2) {
     // In third subpage, so last part(s) of current route is parent.
-    parentId = routeIds[1];
+    parentId = routeIds[1] || routeIds[0];
   }
   else {
     // No parent on screen as this is is in first subpage,
     // so look for any recorded history of latest parent viewed.
-    parentId = viewedParents[routeIds[0]];
-    // If still no parentId, create a blank.
-    if (! parentId) parentId = "";
+    parentId = viewedParents[routeIds[0]] || "";
   }
   // Add slashes between poster and slug to make url more conventional.
   var parentParts = parentId.split(":"),

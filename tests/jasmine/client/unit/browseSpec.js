@@ -6,6 +6,7 @@ describe("In browse mode,", function() {
   beforeEach(inject(function (_modeService_) {
     modeService = _modeService_;
   }));
+/*
   it("the current (clicked or loaded) post is marked for highlighting.", function () {
     // i.e., load() selects posts via getClass()
     var scope = {};
@@ -32,6 +33,7 @@ describe("In browse mode,", function() {
     currentClass = modeService.browse.getClass(args2);
     expect(currentClass).toBe("");
   });
+*/
   it("a post is an internal link.", function () {
     // i.e., getRoute() does something.
     var scope = {};

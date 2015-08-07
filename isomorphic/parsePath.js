@@ -15,7 +15,7 @@ Iso.parsePath = function parsePath(path) {
   // Check for invalid urls
   if (segments[0] === "karma") {
     console.log("detected karma");
-    segments = ["tester:","testA","testB"];
+    segments = ["karma:","debug.html"];
   }
   else if (segments[0].slice(-1) !== ":")
     throw new Error("Incorrect URL: " + path);

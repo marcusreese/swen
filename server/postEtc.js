@@ -1,6 +1,7 @@
 // Publish a post and its context.
-var getPacks = function(ids) {
-  return (Meteor.wrapAsync(Meteor.call.bind(Meteor)))("getGenerations", ids);
+var getFociAsIfSync = function(ids) {
+  // Allow fibers to deal with async, avoiding callbacks in server code.
+  return (Meteor.wrapAsync(Meteor.call.bind(Meteor)))("getFoci", ids);
 }
 Meteor.publish("postEtc", function (path) {
   check(path, String);
@@ -12,9 +13,9 @@ Meteor.publish("postEtc", function (path) {
   var first6 = path.slice(0,6);
   if (first6 === "/karma") return [];
   var ids = Iso.parsePath(path), a = [], packs = [];
-  a = getPacks(ids);
+  a = getFociAsIfSync(ids);
   if (a === undefined) return [];
-  packs = a.map(function(x) {return x.post? x.post.pack : "";});
+  packs = a.map(function(x) {return x.pack;});
   return Posts.find({ pack: { $in: packs }});
 });
 FastRender.onAllRoutes(function(path) {
