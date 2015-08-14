@@ -13,6 +13,7 @@
 <div class="panel" layout="column" layout-fill>
   <md-whiteframe class="md-whiteframe-z1 subpage" 
     ng-repeat="subpage in panelA" 
+    ng-class="{scaledUp: $first, scaledDown: $last}"
     ng-attr-id="{{'0_' + $index}}"> 
       <div class="include" ng-include="'client/views/edit.ng.html'"></div>
       <span class="post" 

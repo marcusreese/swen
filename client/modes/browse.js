@@ -24,6 +24,8 @@ getClass: function getClass(args) {
 
 // The args parameter for click() includes post, rootScope, scope, and maybe event.
 click: function click(args) {
+  // Record mode before $scope.mode is erased.
+  modeService.setCurrentMode("browse");
   
   // Record the subpage clicked? To determine class/size? 
   // But whatever can be done in load from url is better because it means
@@ -49,6 +51,7 @@ load: function load(args) {
   Meteor.call("getFoci", args.scope.idsA, function(err, data) {
     if (err) throw err;
     args.scope.fociInA = data;
+    // Let angular base dom on rootScope to prevent flicker.
     args.rootScope.panelA = args.rootScope.panelA || [{}];
     // Look at the focus post for each generation.
     // Load each subpage with its generation's pack (near siblings).
@@ -98,14 +101,16 @@ getRoute: function getRoute(args) {
   var parentParts = parentId.split(":"),
     childParts = thisId.split(":"),
     parentSection = parentParts.join(":/"),
-    childSection = childParts.join(":/");
+    childSection = childParts.join(":/"),
+    route;
   // If the poster/author is the same, don't mention poster twice.
   if (parentParts[0] === childParts[0]) 
     childSection = childParts[1];
   if (parentId)
-    return "/" + parentSection + "/" + childSection;
+    route = "/" + parentSection + "/" + childSection;
   else
-    return "/" + childSection;
+    route = "/" + childSection;
+  return route;
 }
 
 

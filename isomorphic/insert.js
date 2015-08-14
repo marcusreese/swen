@@ -1,21 +1,23 @@
 // /isomorphic/insert.js
 "use strict";
 Iso.insert = function insert(args) {
-  // This function inserts/posts a new post.
-  var newPost = {},
+console.log('in insert, about to read rootScope.form...',args.rootScope.form);
+  var 
+    // This function inserts/posts a new post.
+    newPost = {},
 
-  // There are three locations in which to insert a post:
-  // 1) as the next sibling after args.post
-  // 2) as the first sibling in the pack of args.post
-  // 3) as the first child of args.post
-      nextSibling = args.insertAs === "nextSibling",
-      firstSibling = args.insertAs === "firstSibling",
-      firstChild = args.insertAs === "firstChild";
+    // There are three locations in which to insert a post:
+    // 1) as the next sibling after args.post
+    // 2) as the first sibling in the pack of args.post
+    // 3) as the first child of args.post
+    nextSibling = args.rootScope.form === "nextSibling",
+    firstSibling = args.rootScope.form === "firstSibling",
+    firstChild = args.rootScope.form === "firstChild";
 
   // A post needs an id (_id for mongo).
   if (!args.scope.draft.id)
     throw new Error("Cannot insert without id.");
-  newPost._id = args.scope.draft.id;
+  newPost._id = "mjr:" + args.scope.draft.id;
 
   // A post needs text.
   if (!args.scope.draft.text)
@@ -57,7 +59,13 @@ console.log("The new post is first child of spawning parent post.");
     // The new post is first child of spawning parent post.
     // So it's new pack is the parent's previous first child
     // Or, if no child yet exists, this post's id will be it.
-    newPost.pack = args.post.childA || newPost._id;
+    if (args.post && args.post.childA) {
+console.log('this 1st block of code is used.');
+      newPost.pack = args.post.childA;
+    }
+    else {
+      newPost.pack = newPost._id;
+    }
   }
   else throw new Error("Insert location unclear");
 
@@ -68,7 +76,7 @@ console.log("The new post is first child of spawning parent post.");
   }
   else if (firstChild) {
     // The new post is being spawned by its parent.
-    newPost.parentA = args.post._id;
+    newPost.parentA = args.scope.fociInA[0]._id;
   }
   else throw new Error("Insert location unclear");
   
@@ -82,9 +90,9 @@ console.log("The new post is first child of spawning parent post.");
     // The new post comes before the first sibling in the pack/subpage.
     newPost.next = args.subpage[0]._id;
   }
-  else if (firstChild && args.post.childA) {
+  else if (firstChild && args.scope.fociInA[0].childA) {
     // The new post comes before the first child of its parent.
-    newPost.next = args.post.childA;
+    newPost.next = args.scope.fociInA[0].childA;
   }
   else if (firstChild) {
     // The new post is the only child, so there is no next sibling.
@@ -102,12 +110,12 @@ console.log("The new post is first child of spawning parent post.");
     //prev: "", // only for pack leader
     //packSize: 0, // only for pack leader
   var result = Posts.insert(newPost);
-  console.log("result:", result);
-  //Some of this next should be in repack?
-  args.oldPost = args.post;
-  args.post = newPost;
-  args.oldPost.next = newPost._id;
-  args.subpage.save(args.oldPost);
-  // .then(function (result) {console.log("result:", result); });
-  Iso.repack(args);
+console.log("result:", result);
+  if (result === newPost._id) {
+    args.newPost = newPost;
+    if (newPost.parentA)
+      Posts.update({ _id: newPost.parentA }, { $set: { childA: newPost._id }});
+    Iso.repack(args);
+  }
+  else console.log("Insert did not seem to work!");
 }

@@ -1,12 +1,49 @@
 // browseSpec.js
 "use strict";
 describe("In browse mode,", function() {
+
+  var 
+    modeService,
+    $scope;
+
   beforeEach(module("swen"));
-  var modeService = {};
+
+  beforeEach(inject(function($rootScope) {
+    $scope = $rootScope.$new();        
+  }));
+
   beforeEach(inject(function (_modeService_) {
     modeService = _modeService_;
   }));
+
+  it("if the url has "-" in third position, the prior id belongs in the first subpage.", 
+    // i.e. Iso.parsePath works on the client side.
+    inject(function($controller) {
+    var ctrl = $controller("Controller", {
+        $scope: $scope
+    });
+    modeService.browse.load({scope: $scope, rootScope: $scope.$parent, route: "/tester:/testA/-"});
+    expect($scope.idsA).toEqual(["tester:testA", "-"]);
+  }));
+  it("if the url does not have "/-", its last id goes in the 2nd subpage.", 
+    // i.e. Iso.parsePath works on the client side.
+    inject(function($controller) {
+    var ctrl = $controller("Controller", {
+        $scope: $scope
+    });
+    modeService.browse.load({scope: $scope, rootScope: $scope.$parent, route: "/tester:/testA/"});
+    expect($scope.idsA).toEqual(["tester:testA"]);
+    modeService.browse.load({scope: $scope, rootScope: $scope.$parent, route: "/tester:/testA/testB"});
+    expect($scope.idsA).toEqual(["tester:testA", "tester:testB"]);
+  }));
+
 /*
+  it("if the url does not end with the third slash, the last specified post should be in the middle subpage.", inject(function($controller) {
+    // i.e., Iso.parsePath and Meteor.call("getFoci") work with load().
+  }));
+  it("if the url ends with the third slash, the specified post should be in the first subpage.", function () {
+
+  });
   it("the current (clicked or loaded) post is marked for highlighting.", function () {
     // i.e., load() selects posts via getClass()
     var scope = {};

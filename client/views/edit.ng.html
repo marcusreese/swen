@@ -6,19 +6,22 @@
       ng-model="draft.text"
     ></textarea>
     <br>
+    at /mjr:/<input type="text" class="route" ng-model="draft.id" />
     <button tabindex=0 
       ng-click="button(post, subpage, $event, $parent.$parent.$index, 'sibling')">
-        + Sibling
+        <md-icon class="tight submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
+        <md-icon class="submit" md-svg-icon="content:ic_add_circle_24px"></md-icon>
     </button>
     <button
       tabindex=0
       ng-click="button(post, subpage, $event, $parent.$parent.$index, 'child')">
-        + Child
+        <md-icon class="tight submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
+        <md-icon class="tight submit" md-svg-icon="navigation:ic_arrow_drop_down_circle_24px"></md-icon>
+        <md-icon class="submit" md-svg-icon="content:ic_add_circle_24px"></md-icon>
+        <!-- &#x2714; &#x2B07; &#x2795; -->
     </button>
-    <button
-      tabindex=0 
-      ng-click="button(post, subpage, $event, $parent.$parent.$index, 'cancel')">
-        Cancel
+    <button tabindex=0 
+      ng-click="button(post, subpage, $event, $parent.$parent.$index, 'done')">
+        <md-icon class="submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
     </button>
-    id: <input type=text ng-model="draft.id" />
 </div>

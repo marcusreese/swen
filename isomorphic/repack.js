@@ -2,7 +2,8 @@
 Iso.repack = function renumber(args) {
   var i = 0,
     packLeader = "",
-    cursor = Posts.find({ pack: args.post.pack }, { sort: { rank: -1 } });
+    prev = "",
+    cursor = Posts.find({ pack: args.newPost.pack }, { sort: { rank: -1 } });
   cursor.forEach(function (obj) {
     // Keep count.
     i++;
@@ -14,6 +15,10 @@ Iso.repack = function renumber(args) {
       console.log("alph not ready");
       return;
     }
+    // Set this post as next for previous post.
+    if (prev) Posts.update({ _id: prev }, { $set: { next: obj._id }});
+    // Replace previous post with this one.
+    prev = obj._id;
     // The first post is the pack leader.
     if (!packLeader) {
       packLeader = obj._id;

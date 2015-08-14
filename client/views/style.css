@@ -17,6 +17,7 @@ button:active, button:focus, button:hover {
   display: inline-block;
 }
 main {
+  perspective: 600px;
 }
 .outer {
   padding: 5px;
@@ -30,6 +31,14 @@ main {
 }
 .post {
 }
+.route {
+}
+.scaledDown {
+  transform: scale(.95);
+}
+.scaledUp {
+  transform: scale(1.05);
+}
 select {
   font-family: RobotoDraft, Roboto, 'Helvetica Neue', sans-serif;
   font-size: 100%;
@@ -40,17 +49,30 @@ select {
 }
 .subpage {
   background: white;
-  margin-top: 10px;
+  margin-top: 3px;
   padding: 10px;
 /*
-  padding: 5px;
-  width: 100%;
-  margin-top: 5px;
-  border-radius: 3px;
-  shadow-right: 10px;
+  transform: rotateX(-5deg);
+  box-shadow: 
+    0px -3px 1px -2px rgba(0, 0, 0, 0.14), 
+    0px -2px 2px 0px rgba(0, 0, 0, 0.098), 
+    0px -1px 5px 0px rgba(0, 0, 0, 0.084);
 */
+}
+.subpage0 {
+  transform: scale(1.5, 1.5);
+  background: pink;
+}
+.subpage2 {
+  transform: scale(.75, .75);
+}
+.submit {
+  color: green;
 }
 textarea {
   width: 100%;
   margin-bottom: 3px;
+}
+.tight {
+  margin-right: -9px;
 }

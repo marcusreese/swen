@@ -12,7 +12,7 @@ describe('In edit mode,', function() {
       scope = {},
       subpage = {save: function(obj) { post.text = obj.text;}};
     scope.draft = {text: "new text"};
-    modeService.edit.sibling({post: post, scope: scope, subpage: subpage}); 
+    modeService.edit.sibling({post: post, scope: scope, subpage: subpage, rootScope: {}}); 
     expect(post.text).toBe("new text");
     scope.draft = {text: "newer text"};
     //modeService.edit.child({post: post, scope: scope, subpage: subpage}); 

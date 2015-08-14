@@ -20,12 +20,12 @@ app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
       controller: "Controller",
       templateUrl: "client/views/page.ng.html",
       resolve: {
-                                'subscribe': [
-                                        '$meteor', function($meteor) {
-                                                return $meteor.subscribe('postEtc', location.pathname);
-                                        }
-                                ]
-                        },
+        'subscribe': [
+          '$meteor', function($meteor) {
+            return $meteor.subscribe('postEtc', location.pathname);
+          }
+        ]
+      },
       url: "/:segmentA0/:segmentA1/:segmentA2/:plusSign/:segmentB0/:segmentB1/:segmentB2",
       params: {
         segmentA0: {
