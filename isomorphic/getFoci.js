@@ -18,6 +18,8 @@ Meteor.methods({
     // Id "-" in 3rd position means 2nd subpage has no focus post
     // But perhaps an insertion form in first place.
     if (foci[0] && last === "-") {
+      // The new insertion form will not have any children yet.
+      foci[2] = {};
       if (foci[0].childA)
         // Try to fill the 2nd subpage with any children of first.
         foci[1] = Posts.findOne({ _id: foci[0].childA });
@@ -25,7 +27,7 @@ Meteor.methods({
       else foci[1] = {};
     }
     // For the rest, wait for foci[1].
-    if (foci[1]) {
+    if (foci[1] && last !== "-") {
       if (ids.length === 1) {
         // There was only one id, so no parent is found yet.
         // Try to use foci[1]'s first parent for first subpage.

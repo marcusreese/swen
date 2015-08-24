@@ -55,9 +55,9 @@ function($scope, $rootScope, modeService){
   }
   
   // Each form uses this to find out if it should display or not.
-  $scope.isShowable = function isShowable(post, subpage) {
+  $scope.isShowable = function isShowable(post, subpage, index) {
     var isShowable = modeService[$scope.mode].isShowable;
-    return isShowable ? isShowable(post, subpage) : "";
+    return isShowable ? isShowable({post: post, subpage: subpage, rootScope: $rootScope, scope: $scope, index: index}) : "";
   }
 
   // Each post uses this function to determine it's href.

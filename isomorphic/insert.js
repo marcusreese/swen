@@ -1,7 +1,6 @@
 // /isomorphic/insert.js
 "use strict";
 Iso.insert = function insert(args) {
-console.log('in insert, about to read rootScope.form...',args.rootScope.form);
   var 
     // This function inserts/posts a new post.
     newPost = {},
@@ -43,25 +42,21 @@ console.log('in insert, about to read rootScope.form...',args.rootScope.form);
   // A post needs a pack of siblings (for pagination).
   // The leader of the pack gives its name to the pack.
   if (nextSibling) {
-console.log("The new post comes after spawning sibling post.");
     // The new post comes after spawning sibling post.
     // So it gets the same pack for now.
     newPost.pack = args.post.pack;
   }
   else if (firstSibling) {
-console.log("The new post comes before spawning sibling post.");
     // The new post comes before spawning sibling post.
     // It gets old pack name for repack, where the pack is renamed.
     newPost.pack = args.subpage[0].pack; // or ._id
   }
   else if (firstChild) {
-console.log("The new post is first child of spawning parent post.");
     // The new post is first child of spawning parent post.
-    // So it's new pack is the parent's previous first child
+    // So it's new pack is the parent's previous first child (until repack).
     // Or, if no child yet exists, this post's id will be it.
-    if (args.post && args.post.childA) {
-console.log('this 1st block of code is used.');
-      newPost.pack = args.post.childA;
+    if (args.scope.fociInA[1]._id) {
+      newPost.pack = args.scope.fociInA[1]._id;
     }
     else {
       newPost.pack = newPost._id;
@@ -110,12 +105,10 @@ console.log('this 1st block of code is used.');
     //prev: "", // only for pack leader
     //packSize: 0, // only for pack leader
   var result = Posts.insert(newPost);
-console.log("result:", result);
   if (result === newPost._id) {
     args.newPost = newPost;
     if (newPost.parentA)
       Posts.update({ _id: newPost.parentA }, { $set: { childA: newPost._id }});
     Iso.repack(args);
   }
-  else console.log("Insert did not seem to work!");
 }

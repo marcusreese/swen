@@ -110,6 +110,8 @@ getRoute: function getRoute(args) {
     route = "/" + parentSection + "/" + childSection;
   else
     route = "/" + childSection;
+  args.scope.routes = args.scope.routes || { 0: {}, 1: {}, 2: {} };
+  args.scope.routes[args.sIndex][args.post._id] = route;
   return route;
 }
 

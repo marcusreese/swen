@@ -1,27 +1,49 @@
+<br>
 <div class="edit" 
-  ng-show="isShowable(post, subpage)"
+  ng-show="isShowable(post, subpage, $parent.$index)"
   ng-attr-id="{{'0_' + $parent.$parent.$index + '_' + post._id + '_form'}}">
-    <textarea 
+  <textarea
+    aria-label="Draft text"
       ng-attr-id="{{'0_' + $parent.$parent.$index + '_' + post._id + '_textarea'}}" 
       ng-model="draft.text"
-    ></textarea>
-    <br>
-    at /mjr:/<input type="text" class="route" ng-model="draft.id" />
-    <button tabindex=0 
-      ng-click="button(post, subpage, $event, $parent.$parent.$index, 'sibling')">
-        <md-icon class="tight submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
-        <md-icon class="submit" md-svg-icon="content:ic_add_circle_24px"></md-icon>
-    </button>
-    <button
-      tabindex=0
-      ng-click="button(post, subpage, $event, $parent.$parent.$index, 'child')">
-        <md-icon class="tight submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
-        <md-icon class="tight submit" md-svg-icon="navigation:ic_arrow_drop_down_circle_24px"></md-icon>
-        <md-icon class="submit" md-svg-icon="content:ic_add_circle_24px"></md-icon>
-        <!-- &#x2714; &#x2B07; &#x2795; -->
-    </button>
-    <button tabindex=0 
-      ng-click="button(post, subpage, $event, $parent.$parent.$index, 'done')">
-        <md-icon class="submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
-    </button>
+      ></textarea>
+    <md-input-container class="route" >
+    at /mjr:/
+    <input
+      aria-label="editable route"
+      style="display: inline-block;"
+      class="slug"
+      type="text"
+      ng-model="draft.id" 
+    /></md-input-container>
+    <div class="formButtons">
+      <md-button tabindex=0 
+        aria-label="save changes and begin adding sibling note"
+        class="formButton"
+        ng-click="button(post, subpage, $event, $parent.$parent.$index, 'sibling')">
+          <md-icon class="tight submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
+          <md-icon class="submit" md-svg-icon="content:ic_add_circle_24px"></md-icon>
+          <div class="tiny">CONTINUE</div>
+      </md-button>
+      <md-button
+        aria-label="save changes and begin adding child note"
+        class="formButton"
+        tabindex=0
+        ng-click="button(post, subpage, $event, $parent.$parent.$index, 'child')">
+          <md-icon class="tight submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
+         
+          <md-icon class="tight submit" md-svg-icon="navigation:ic_arrow_drop_down_circle_24px"></md-icon>
+          <md-icon class="submit" md-svg-icon="content:ic_add_circle_24px"></md-icon>
+          <div class="tiny">GO DEEPER</div>
+          <!-- &#x2714; &#x2B07; &#x2795; -->
+      </md-button>
+      <md-button 
+        aria-label="save changes and stop editing"
+        class="formButton"
+      tabindex=0 
+        ng-click="button(post, subpage, $event, $parent.$parent.$index, 'save')">
+          <md-icon class="submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
+          <div class="tiny">SAVE</div>
+        </md-button>
+      </div>
 </div>

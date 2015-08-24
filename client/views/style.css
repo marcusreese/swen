@@ -6,32 +6,51 @@ body {
 /*  background: #dcdddd;*/
   margin: 0;
   padding: 0;
-}
-button:active, button:focus, button:hover {
-  color: green;
+  min-height: 100%;
 }
 .edit {
   display: block;
+}
+.formButton {
+  margin: 3px 3px 0px 0px;
+  min-width: 0;
+  background: radial-gradient(whitesmoke, gainsboro);  /* whitesmoke, gainsboro, whitesmoke); */
+}
+.formButton:focus {
+  background: radial-gradient(whitesmoke, darkseagreen);
+}
+.formButton:active, .formButton:hover {
+  background: linear-gradient(whitesmoke, darkseagreen, whitesmoke);
+}
+.formButtons {
+  display: inline-block;
+}
+html {
+  min-height: 100%;
 }
 .include {
   display: inline-block;
 }
 main {
   perspective: 600px;
+  max-width: 500px;
+  margin: auto;
 }
 .outer {
-  padding: 5px;
+  padding: 10px;
+  min-height: 100%;
 }
 .page {
   width: 96%;
-  max-width: 500px;
-  margin: auto;
+  min-height: 100vh;
 }
 .panel {
 }
 .post {
 }
 .route {
+  width: 50%;
+  display: inline-block;
 }
 .scaledDown {
   transform: scale(.95);
@@ -47,9 +66,12 @@ select {
   background: lightcyan;
   background: linear-gradient(white, lightcyan, lightcyan, white);
 }
+.slug {
+  max-width: 150px;
+}
 .subpage {
   background: white;
-  margin-top: 3px;
+  margin: 3px 0px 0px 5px;
   padding: 10px;
 /*
   transform: rotateX(-5deg);
@@ -61,7 +83,6 @@ select {
 }
 .subpage0 {
   transform: scale(1.5, 1.5);
-  background: pink;
 }
 .subpage2 {
   transform: scale(.75, .75);
@@ -72,7 +93,17 @@ select {
 textarea {
   width: 100%;
   margin-bottom: 3px;
+  border: 0;
+  box-shadow: 
+    0px 1px 2px 0px rgba(0, 0, 0, 0.098), 
+    0px 1px 5px 0px rgba(0, 0, 0, 0.084);
 }
 .tight {
-  margin-right: -9px;
+  margin-right: -10px;
+}
+.tiny {
+  font-size: .5em;
+  line-height: 1em;
+  margin-top: -5px;
+  padding-bottom: 4px;
 }
