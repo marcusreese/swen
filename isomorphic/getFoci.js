@@ -8,10 +8,19 @@ Meteor.methods({
     // Returns an array holding 3 posts, one for each future subpage.
     var foci = [],
         // Work backward through ids.
-        last = (ids[1] !== undefined) ? ids[1] : ids[0];
+        last = (ids[1] !== undefined) ? ids[1] : ids[0],
+        lastParts = last.split(":"),
+        lastSlug = lastParts[1];
     // Start the middle subpage with what follows the 
     // third slash of the route if the third slash exists.
-    if (last !== "-")
+    if (lastSlug[1] && lastSlug[0] === "-") {
+      // A blank form is inserted before its siblings.
+      foci[1] = Posts.findOne({ _id: lastParts[0] + ":" + lastSlug.slice(1) });
+      // The new insertion form will not have any children yet.
+      foci[2] = {};
+    }
+    else if (last !== "-")
+      // The normal case
       foci[1] = Posts.findOne({ _id: last });
     // If there's another id, use it for the first subpage.
     if (ids.length > 1) foci[0] = Posts.findOne({ _id: ids[0] });

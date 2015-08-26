@@ -41,8 +41,18 @@ main {
   min-height: 100%;
 }
 .page {
-  width: 96%;
+  width: 100%;
+  padding-left: 2%;
+  padding-right: 10%;
+  margin-left: -10px;
+  margin-right: -10px;
   min-height: 100vh;
+}
+.page:focus, .page:focus:active, .page:active, .page.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 .panel {
 }

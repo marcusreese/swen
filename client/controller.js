@@ -34,6 +34,11 @@ function($scope, $rootScope, modeService){
     return getClass ? getClass({post: post, sIndex: subpageIndex, scope: $scope}) : "";
   }
 
+  $scope.clickOut = function clickOut($event) {
+    var clickOut = modeService[$scope.mode].clickOut;
+    if (clickOut) clickOut({scope: $scope, rootScope: $rootScope, event: $event});
+  }
+
   $scope.button = function button(post, subpage, $event, subpageIndex, action) {
     modeService[$scope.mode][action]({
       post: post, 

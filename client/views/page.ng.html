@@ -1,5 +1,5 @@
-<div class="page" ng-click="click(undefined, $event)">
-  <header layout="row" layout-sm="column" layout-align="space-around center">
+<div class="page" id="wrapper" ng-click="clickOut($event)">
+  <header id="header" layout="row" layout-sm="column" layout-align="space-around center">
     <h3><a href="/">Datawebber/Swen</a></h3>
     <md-select ng-model="mode">
       <md-option ng-repeat="mode in modes" value="{{mode.codeValue}}">
@@ -13,20 +13,31 @@
 <div class="panel" layout="column" layout-fill>
   <md-whiteframe class="md-whiteframe-z1 subpage" 
     ng-repeat="subpage in panelA" 
+    ng-init="subpageIndex = $index"
     ng-class="{scaledUp: $first, scaledDown: $last}"
     ng-attr-id="{{'0_' + $index}}"> 
-      <div class="include" ng-include="'client/views/edit.ng.html'"></div>
+      <div ng-show="display[$index]['-firstForm'].isFormShowable">
+        <div
+          class="include" 
+          ng-include="'client/views/edit.ng.html'">
+        </div>
+      </div>
       <span class="post" 
         ng-repeat="post in subpage" 
         ng-attr-id="{{'0_' + $parent.$index + '_' + $index}}">
-          <a my-href="getRoute(post, subpage, $parent.$index)" 
-            ng-class="getClass(post, $parent.$index)" 
+          <a href="{{display[$parent.$index][post._id].route}}"
+            class="{{display[$parent.$index][post._id].linkClass}}" 
             ng-click="click(post, $event, $parent.$index)"
-            ng-hide="isEditable(post)"
+            ng-hide="display[$parent.$index][post._id].isEditable" 
             ng-attr-id="{{'0_' + $parent.$index + '_' + post._id + '_a'}}">
               {{post.text}}
           </a>
-          <div class="include" ng-include="'client/views/edit.ng.html'"></div>
+          <div ng-show="display[$parent.$index][post._id].isFormShowable">
+            <div
+              class="include" 
+              ng-include="'client/views/edit.ng.html'">
+            </div>
+          </div>
       </span>
   </md-whiteframe>
 </div>

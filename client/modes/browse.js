@@ -2,25 +2,10 @@
 angular.module("swen").run(["modeService", "$meteor", "$location", 
   function addBrowse(modeService, $meteor, $location) { 
     function browse () {
-      var viewedParents = {};
-      return {
+      var viewedParents = {},
+          returnable = {
 
 // Letting all returned functions start at the left margin, for readability.
-
-getClass: function getClass(args) {
-  // Every post uses this to see if it is highlighted or not.
-  // But there's no point in selecting any until the
-  // focus posts are known.
-  if (! args.scope.fociInA) return "";
-  // Focus posts are highlighted to show that they are the
-  // parents of the visible children.
-  var focus = args.post._id === args.scope.fociInA[args.sIndex]._id;
-  // There's no real focus in the last subpage (sIndex: 2)
-  // because focus means the children are visible,
-  // and that's impossible for the last subpage.
-  if (args.sIndex > 1) focus = false;
-  return focus ? "selected" : "";
-},
 
 // The args parameter for click() includes post, rootScope, scope, and maybe event.
 click: function click(args) {
@@ -43,21 +28,24 @@ load: function load(args) {
   args.scope.idsA = Iso.parsePath(panelDescription[0]);
   // Later, consider second half.
 
-  // Save parent-child relationship for a form of back navigation.
-  if (args.scope.idsA[1])
-    viewedParents[args.scope.idsA[1]] = args.scope.idsA[0];
-  
+  // Create a place for scope variables for each displayed post.
+  args.scope.display = {0: {}, 1: {}, 2: {}};
+ 
   // Get the parent's siblings, child's siblings, and grandchildren.
   Meteor.call("getFoci", args.scope.idsA, function(err, data) {
     if (err) throw err;
     args.scope.fociInA = data;
+    // Save child-parent relationship for a form of back navigation.
+    if (data) viewedParents[data[1].pack] = data[0]._id;
     // Let angular base dom on rootScope to prevent flicker.
     args.rootScope.panelA = args.rootScope.panelA || [{}];
     // Look at the focus post for each generation.
     // Load each subpage with its generation's pack (near siblings).
-    for (var i in args.scope.fociInA) {
-      args.rootScope.panelA[i] = $meteor.collection(function() {
-        var pack = args.scope.fociInA[i].pack;
+    for (var subpageIndex in args.scope.fociInA) {
+      var focusPost = args.scope.fociInA[subpageIndex],
+          panel = args.rootScope.panelA;
+      panel[subpageIndex] = $meteor.collection(function() {
+        var pack = focusPost.pack;
         // Load a reactive pack of siblings in the subpage.
         return Posts.find(
           { pack: pack },
@@ -65,37 +53,48 @@ load: function load(args) {
           { sort: { rank: -1 }}
         ); // End of what's returned to $meteor.collection;
       }); // End of giving a subpage its reactive collection.
+      // Loop through only the posts--not every i in panel[subpageIndex]
+      for (var i = 0; i < panel[subpageIndex].length; i++) { 
+        var post = panel[subpageIndex][i];
+        // Build out the tree structure for view to use.
+        if (! args.scope.display[subpageIndex][post._id])
+          args.scope.display[subpageIndex][post._id] = {};
+        var displayScope =  args.scope.display[subpageIndex][post._id];
+        displayScope.linkClass = post._id === focusPost._id ? "selected" : "";
+        if (subpageIndex == 2) displayScope.linkClass = "";
+        displayScope.route = getRoute({
+          post: post, 
+          scope: args.scope, 
+          sIndex: subpageIndex
+        });
+      }
     } // End of looping through the focus posts for each generation.
     // Allow decorator modules to build on this load function.
     if (args.callback) args.callback(args);
   }); // End of getFoci call
-}, // End of load function
+} // End of load function
 
-getRoute: function getRoute(args) {
-  // This is called by every displayed post to determine its href.
+}; // End of returnable
+      
+// Start helper functions
+
+function getRoute(args) {
   // The href should start with parent if possible, then post's id.
   // The args param includes post, scope and sIndex (subpageIndex).
   var   
     // Post's own id for last part of href route:
     thisId = args.post._id,
     // Parent id for middle part of href route:
-    parentId = "",
-    // Ids from current route:
-    routeIds = args.scope.idsA;
+    parentId = "";
   // Deal differently with hrefs in different subpages.
   // (sIndex is short for subpageIndex.)
-  if (args.sIndex === 1) {
-    // In second subpage, so first part(s) of current route is parent.
-    parentId = routeIds[1] ? routeIds[0] : "";
-  }
-  else if (args.sIndex === 2) {
-    // In third subpage, so last part(s) of current route is parent.
-    parentId = routeIds[1] || routeIds[0];
+  if (args.sIndex > 0) {
+    parentId = args.scope.fociInA[args.sIndex - 1]._id || "";
   }
   else {
     // No parent on screen as this is is in first subpage,
     // so look for any recorded history of latest parent viewed.
-    parentId = viewedParents[routeIds[0]] || "";
+    parentId = viewedParents[args.post.pack] || "";
   }
   // Add slashes between poster and slug to make url more conventional.
   var parentParts = parentId.split(":"),
@@ -110,15 +109,11 @@ getRoute: function getRoute(args) {
     route = "/" + parentSection + "/" + childSection;
   else
     route = "/" + childSection;
-  args.scope.routes = args.scope.routes || { 0: {}, 1: {}, 2: {} };
-  args.scope.routes[args.sIndex][args.post._id] = route;
   return route;
 }
 
-
-// That's all the returned functions, so leaving left margin again.
-
-      } // End of return block
+      // That's all the functions, so leaving left margin again.
+      return returnable;
     } // End of browse function
     // Make this the default mode.
     modeService.addMode("Browse", browse(), "default");
