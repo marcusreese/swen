@@ -6,16 +6,17 @@ app.controller("Controller", [
   "modeService", 
 function($scope, $rootScope, modeService){
 
-  $scope.status = function() {console.log(JSON.stringify(Posts.find().fetch()));}; 
+  //$scope.status = function() {console.log(JSON.stringify(Posts.find().fetch()));}; 
 
-  // Get options for the drop-down menu:
-  $scope.modes = modeService.getModes();
-
-  // For some reason ng-selected is not enough to set mode, so . . .
   $scope.mode = modeService.getCurrentMode();
 
   // Prepare a blank draft that can be prepared for the user.
   $scope.draft = {text: ""};
+  
+  $scope.keypress = function keypress(post, $event) {
+    var keypress = modeService[$scope.mode].keypress;
+    if (keypress) keypress({ post: post, event: $event, scope: $scope, rootScope: $rootScope });
+  }
 
   $scope.click = function click(post, $event, subpageIndex) {
     if (! $event) {
@@ -29,14 +30,14 @@ function($scope, $rootScope, modeService){
   var load = modeService[$scope.mode].load;
   if (load) load({ scope: $scope, rootScope: $rootScope, route: location.pathname });
 
-  $scope.getClass = function getClass(post, subpageIndex) {
-    var getClass = modeService[$scope.mode].getClass;
-    return getClass ? getClass({post: post, sIndex: subpageIndex, scope: $scope}) : "";
-  }
-
   $scope.clickOut = function clickOut($event) {
     var clickOut = modeService[$scope.mode].clickOut;
     if (clickOut) clickOut({scope: $scope, rootScope: $rootScope, event: $event});
+  }
+
+  $scope.tool = function tool($event, mode) {
+    var tool = modeService[mode].tool;
+    if (tool) tool({scope: $scope, rootScope: $rootScope, event: $event});
   }
 
   $scope.button = function button(post, subpage, $event, subpageIndex, action) {
@@ -51,25 +52,5 @@ function($scope, $rootScope, modeService){
   }
 
   $scope.msgToUser = "";
-
-  // Each post uses this function to find out if it should be a textarea or not (in edit mode).
-  $scope.isEditable = function isEditable(post) {
-    if ($scope.mode === "edit")
-      return modeService[$scope.mode].isEditable(post);
-    else return false;
-  }
-  
-  // Each form uses this to find out if it should display or not.
-  $scope.isShowable = function isShowable(post, subpage, index) {
-    var isShowable = modeService[$scope.mode].isShowable;
-    return isShowable ? isShowable({post: post, subpage: subpage, rootScope: $rootScope, scope: $scope, index: index}) : "";
-  }
-
-  // Each post uses this function to determine it's href.
-  $scope.getRoute = function getRoute(post, subpage, subpageIndex) {
-    // See if the current mode supports getRoute
-    var getRoute = modeService[$scope.mode].getRoute;
-    return getRoute ? getRoute({post: post, sIndex: subpageIndex, scope: $scope}) : "";
-  }
 
 }]);

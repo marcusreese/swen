@@ -1,11 +1,22 @@
 <div class="page" id="wrapper" ng-click="clickOut($event)">
-  <header id="header" layout="row" layout-sm="column" layout-align="space-around center">
-    <h3><a href="/">Datawebber/Swen</a></h3>
-    <md-select ng-model="mode">
-      <md-option ng-repeat="mode in modes" value="{{mode.codeValue}}">
-        {{mode.displayValue}}
-      </md-option>
-    </md-select>
+  <header
+    id="header"
+    layout="row"
+    layout-align="space-around center">
+      <h3><a href="/">Datawebber</a></h3>
+      <div class="formButtons">
+        <md-button
+          aria-label="Edit"
+          class="{{header.tools.edit.buttonClass}}"
+          tabindex=0
+          ng-click="tool($event, 'edit')">
+            <md-icon
+              class="{{header.tools.edit.iconClass}}"
+              md-svg-icon="image:ic_edit_24px">
+            </md-icon>
+            <div class="tiny">{{header.tools.edit.text}}</div>
+        </md-button>
+      </div>
   </header>
   <div>{{msgToUser}}</div>
   <!--button ng-click="status()">status</button-->

@@ -1,8 +1,18 @@
 "use strict";
-angular.module("swen").run(["modeService", "$timeout", "$location",
-  function addEdit(modeService, $timeout, $location) {
+angular.module("swen").run(["modeService", "$timeout", "$location", "$rootScope",
+  function addEdit(modeService, $timeout, $location, $rootScope) {
     function edit() { 
-      var temp, returnable = {
+      var returnable;
+      $rootScope.header = {
+        tools: {
+          edit: {
+            text: "EDIT",
+            iconClass: "submit",
+            buttonClass: "formButton"
+          }
+        }
+      };
+      returnable = {
 
 // Letting all returned functions start at the left margin, for readability.
 
@@ -15,6 +25,8 @@ child: function child(args) {
     if (args.scope.draft.text) {
       Iso.insert(args);
     }
+    // If there's no text, cannot create a child of nothing.
+    else clear(args);
   }
   else {
     // Concluding an update.
@@ -39,9 +51,12 @@ click: function click(args) {
   }
 },
 
-clickOut: function blur(args) {
+clickOut: function clickOut(args) {
   var id = args.event.target.id;
   if (id==="wrapper" || id==="header") clear(args);
+},
+
+keypress: function keypress(args) {
 },
 
 load: function load(args) {
@@ -90,6 +105,11 @@ sibling: function sibling(args) {
     args.rootScope.form = "nextSibling";
     nextInsertable(args);
   }
+},
+
+tool: function tool(args) {
+  args.scope.mode = "edit";
+  args.rootScope.header.tools.edit.text = "EDITING";
 }
 
 
@@ -102,10 +122,12 @@ sibling: function sibling(args) {
       function clear(args) {
         var editable = args.scope.fociInA[1];
         delete args.rootScope.form;
+        args.rootScope.header.tools.edit.text = "EDIT";
         modeService.setCurrentMode("browse");
         if (args.scope.idsA[1] === "-") {
-          var idParts = args.newPost._id.split(":");
-          $location.path(location.pathname.slice(0,-1) + idParts[1]);
+          // New first child form has been up.
+          // Whether draft saved or simply clicked out, this works.
+          window.history.back();
         }
         else if (args.newPost) {
           var idParts = args.newPost._id.split(":");
@@ -117,8 +139,9 @@ sibling: function sibling(args) {
           args.scope.display[1]["-firstForm"].isFormShowable = false;
           args.scope.mode = "browse";
           // Restore any deleted children of focus.
-          if (! args.rootScope.panelA[2].length)
-            args.rootScope.panelA[2] = JSON.parse(temp);
+          if (! args.rootScope.panelA[2].length && args.scope.temp)
+            args.rootScope.panelA[2] = JSON.parse(args.scope.temp);
+          args.scope.temp = "";
           // Restore highlighting.
           args.scope.display[1][editable._id].linkClass = "selected";
         }
@@ -142,7 +165,7 @@ sibling: function sibling(args) {
         if (! args.scope.fociInA)
           // This will be rerun after the data comes in.
           return;
-        var editable = args.scope.fociInA[1];
+        var editable = Posts.findOne({ _id: args.scope.fociInA[1]._id });
         args.scope.display[1]["-firstForm"] = {};
         if (args.rootScope.form === "update") {
           // Display the form
@@ -188,7 +211,7 @@ sibling: function sibling(args) {
         var editable = args.scope.fociInA[1];
         args.scope.display[1][editable._id].isEditable = false;
         // There are no children of a blank form, so show none.
-        temp = JSON.stringify(args.rootScope.panelA[2]);
+        args.scope.temp = JSON.stringify(args.rootScope.panelA[2]);
         args.rootScope.panelA[2] = [];
         // And stop highlighting the now previous post.
         args.scope.display[1][editable._id].linkClass = "";

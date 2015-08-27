@@ -13,7 +13,7 @@ Meteor.methods({
         lastSlug = lastParts[1];
     // Start the middle subpage with what follows the 
     // third slash of the route if the third slash exists.
-    if (lastSlug[1] && lastSlug[0] === "-") {
+    if (lastSlug && lastSlug[1] && lastSlug[0] === "-") {
       // A blank form is inserted before its siblings.
       foci[1] = Posts.findOne({ _id: lastParts[0] + ":" + lastSlug.slice(1) });
       // The new insertion form will not have any children yet.

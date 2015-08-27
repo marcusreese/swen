@@ -7,6 +7,8 @@
     aria-label="Draft text"
       ng-attr-id="{{'0_' + subpageIndex + '_' + post._id + '_textarea'}}" 
       ng-model="draft.text"
+      ng-trim="false"
+      ng-keypress="keypress(post, $event)"
       ></textarea>
     <md-input-container class="route" >
     at /mjr:/
