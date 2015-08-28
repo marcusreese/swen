@@ -8,7 +8,7 @@
       ng-attr-id="{{'0_' + subpageIndex + '_' + post._id + '_textarea'}}" 
       ng-model="draft.text"
       ng-trim="false"
-      ng-keypress="keypress(post, $event)"
+      ng-change="change('content', post)"
       ></textarea>
     <md-input-container class="route" >
     at /mjr:/
@@ -17,7 +17,8 @@
       style="display: inline-block;"
       class="slug"
       type="text"
-      ng-model="draft.id" 
+      ng-model="draft.id"
+      ng-change="change('slug', post)" 
     /></md-input-container>
     <div class="formButtons">
       <md-button tabindex=0 

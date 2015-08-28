@@ -20,7 +20,7 @@ body {
 .formButton:focus {
   background: radial-gradient(whitesmoke, darkseagreen);
 }
-.formButton:active, .formButton:hover {
+.formButton:active, .formButton:hover, .formButton.active {
   background: linear-gradient(whitesmoke, darkseagreen, whitesmoke);
 }
 .formButtons {
@@ -34,6 +34,11 @@ html {
 }
 main {
   perspective: 600px;
+  max-width: 500px;
+  margin: auto;
+}
+.md-left.md-right {
+  text-align: center;
   max-width: 500px;
   margin: auto;
 }
@@ -66,8 +71,9 @@ main {
 .scaledDown {
   transform: scale(.95);
 }
-.scaledUp {
+.subpage.scaledUp {
   transform: scale(1.05);
+  border: 0;
 }
 select {
   font-family: RobotoDraft, Roboto, 'Helvetica Neue', sans-serif;
@@ -84,6 +90,8 @@ select {
   background: white;
   margin: 3px 0px 0px 5px;
   padding: 10px;
+  border-top: 1px solid lightgray;
+  box-shadow: none;
 /*
   transform: rotateX(-5deg);
   box-shadow: 

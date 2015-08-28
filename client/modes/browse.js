@@ -71,6 +71,7 @@ load: function load(args) {
     } // End of looping through the focus posts for each generation.
     // Allow decorator modules to build on this load function.
     if (args.callback) args.callback(args);
+    else args.scope.showHint("HINT: Select a note to see the linked notes beneath it.");
   }); // End of getFoci call
 } // End of load function
 

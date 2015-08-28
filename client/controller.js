@@ -3,8 +3,9 @@ var app = angular.module("swen");
 app.controller("Controller", [  
   "$scope", 
   "$rootScope",
-  "modeService", 
-function($scope, $rootScope, modeService){
+  "modeService",
+  "$mdToast",
+function($scope, $rootScope, modeService, $mdToast){
 
   //$scope.status = function() {console.log(JSON.stringify(Posts.find().fetch()));}; 
 
@@ -13,9 +14,10 @@ function($scope, $rootScope, modeService){
   // Prepare a blank draft that can be prepared for the user.
   $scope.draft = {text: ""};
   
-  $scope.keypress = function keypress(post, $event) {
-    var keypress = modeService[$scope.mode].keypress;
-    if (keypress) keypress({ post: post, event: $event, scope: $scope, rootScope: $rootScope });
+  $scope.change = function change(target, post) {
+    // Look for a function like contentChange or slugChange.
+    var change = modeService[$scope.mode][target + "Change"];
+    if (change) change({ post: post, scope: $scope, rootScope: $rootScope });
   }
 
   $scope.click = function click(post, $event, subpageIndex) {
@@ -52,5 +54,21 @@ function($scope, $rootScope, modeService){
   }
 
   $scope.msgToUser = "";
+  $rootScope.hints = $rootScope.hints || {};
+  $scope.showHint = function(message) {
+    if (! message) alert("no message");
+    if ($rootScope.hints[message]) return;
+    $rootScope.hints[message] = true;
+    $mdToast.show(
+      $mdToast.simple()
+      .content(message)
+      .position("bottom left right")
+      .hideDelay(7000)
+    );
+  }
+  $scope.hideHint = function() {
+    console.log('closing hint');
+    $mdToast.hide();
+  }
 
 }]);

@@ -2,7 +2,7 @@
 angular.module("swen").run(["modeService", "$timeout", "$location", "$rootScope",
   function addEdit(modeService, $timeout, $location, $rootScope) {
     function edit() { 
-      var returnable;
+      var memo = {}, returnable;
       $rootScope.header = {
         tools: {
           edit: {
@@ -18,6 +18,7 @@ angular.module("swen").run(["modeService", "$timeout", "$location", "$rootScope"
 
 
 child: function child(args) {
+  args.scope.hideHint();
   // Conclude one update/insert and then begin update/insert of first child.
   var isInsert = args.rootScope.form ? args.rootScope.form !== "update" : false;
   if (isInsert) {
@@ -36,6 +37,7 @@ child: function child(args) {
 },
 
 click: function click(args) {
+  args.scope.hideHint();
   // The scope's mode is already "edit" or we wouldn't be here,
   // but modeService probably doesn't know it yet, and it needs to know
   // because scope.mode is about to be erased when event default happens.
@@ -56,7 +58,34 @@ clickOut: function clickOut(args) {
   if (id==="wrapper" || id==="header") clear(args);
 },
 
-keypress: function keypress(args) {
+contentChange: function contentChange(args) {
+  args.scope.hideHint();
+  // There was a change in the textarea, so use the new text.
+  // Generate link suggestions and a url if this is an insert.
+  if (! args.scope.form || args.scope.form === "update") return;
+  if (! args.scope.draft.text) {
+    args.scope.draft.id = ""; 
+    return;
+  }
+  args.formattedSlug = Iso.draftSlug(args);
+  Meteor.call(
+    "checkSlug", 
+    // The current args may cause stack overflow when
+    // Meteor uses EJSON.clone on the args.
+    {
+      formattedSlug: args.formattedSlug,
+      poster: args.poster || "mjr", //temp
+    },
+    function (err, data) {
+      if (err) throw err;
+      //memo.slugChangedBySystem = true;
+      args.scope.draft.id = data.suggestedSlug;
+      args.scope.$apply();
+    }
+  );
+
+  // If the end of the text is a newline, shift focus down.
+  
 },
 
 load: function load(args) {
@@ -68,6 +97,7 @@ load: function load(args) {
 },
 
 save: function save(args) {
+  args.scope.hideHint();
   // Conclude an update/insert and do not start another.
   var isUpdate = args.rootScope.form === "update";
   if (isUpdate) {
@@ -83,6 +113,7 @@ save: function save(args) {
 },
 
 sibling: function sibling(args) {
+  args.scope.hideHint();
   // Conclude one update/insert and then begin update/insert of next sibling.
   var isInsert = args.rootScope.form ? args.rootScope.form !== "update" : false;
   if (isInsert) {
@@ -107,9 +138,49 @@ sibling: function sibling(args) {
   }
 },
 
+slugChange: function slugChange(args) {
+  args.scope.hideHint();
+  // If the user is manually suggesting a slug, check it and respond.
+  /*
+  if (memo.slugChangedBySystem) {
+    memo.slugChangedBySystem = false;
+    return;
+  }
+  */
+  args.roughSlug = args.scope.draft.id;
+  Iso.formatSlug(args);
+  Meteor.call(
+    "checkSlug", 
+    // The current args may cause stack overflow when
+    // Meteor uses EJSON.clone on the args.
+    {
+      formattedSlug: args.formattedSlug,
+      poster: args.poster || "mjr", //temp
+      msgToUser:  args.msgToUser
+    },
+    function (err, data) {
+      if (err) throw err;
+      //memo.slugChangedBySystem = true;
+      args.scope.draft.id = data.suggestedSlug;
+      if (data.msgToUser) args.scope.showHint(data.msgToUser);
+      args.scope.$apply();
+    }
+  );
+},
+
 tool: function tool(args) {
+  // Make it ready to clear().
+  args.scope.display[1]["-firstForm"] = 
+    args.scope.display[1]["-firstForm"] || {};
+  // Make the tool togglable.
+  if (args.scope.mode === "edit") {
+    clear(args);
+    return;
+  }
   args.scope.mode = "edit";
   args.rootScope.header.tools.edit.text = "EDITING";
+  args.rootScope.header.tools.edit.buttonClass += " active";
+  args.scope.showHint("Click a note to edit it.");
 }
 
 
@@ -144,6 +215,9 @@ tool: function tool(args) {
           args.scope.temp = "";
           // Restore highlighting.
           args.scope.display[1][editable._id].linkClass = "selected";
+          // Restore tool.
+          args.rootScope.header.tools.edit.buttonClass = "formButton";
+          
         }
       }
 
@@ -166,7 +240,6 @@ tool: function tool(args) {
           // This will be rerun after the data comes in.
           return;
         var editable = Posts.findOne({ _id: args.scope.fociInA[1]._id });
-        args.scope.display[1]["-firstForm"] = {};
         if (args.rootScope.form === "update") {
           // Display the form
           args.scope.display[1][editable._id].isFormShowable = true;
@@ -266,12 +339,4 @@ if (input.length > 200) {
   input = input.slice(0,300);
 }
 
-// A little algorigthm for choosing a slug.
-$scope.beforeBiggest = "";
-$scope.biggest = "";
-var newWord = "", beforeNew = "";
-if (newWord.length > biggest.length) {
-  $scope.biggest = newWord;
-  $scope.beforeBiggest = beforeNew;
-}
 */
