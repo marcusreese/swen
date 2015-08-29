@@ -21,12 +21,14 @@ Meteor.methods({
     }
     else if (last !== "-")
       // The normal case
+      // But first remove any final hyphen to find the true id.
+      if (last.slice(-1) === "-") last = last.slice(0, -1);
       foci[1] = Posts.findOne({ _id: last });
     // If there's another id, use it for the first subpage.
     if (ids.length > 1) foci[0] = Posts.findOne({ _id: ids[0] });
     // Id "-" in 3rd position means 2nd subpage has no focus post
-    // But perhaps an insertion form in first place.
-    if (foci[0] && last === "-") {
+    // But perhaps an insertion form in first or last place.
+    if (foci[0] && (last === "-" || last === "--")) {
       // The new insertion form will not have any children yet.
       foci[2] = {};
       if (foci[0].childA)

@@ -3,6 +3,7 @@ angular.module("swen").run(["modeService", "$meteor", "$location",
   function addBrowse(modeService, $meteor, $location) { 
     function browse () {
       var viewedParents = {},
+          memo = {},
           returnable = {
 
 // Letting all returned functions start at the left margin, for readability.
@@ -71,7 +72,18 @@ load: function load(args) {
     } // End of looping through the focus posts for each generation.
     // Allow decorator modules to build on this load function.
     if (args.callback) args.callback(args);
-    else args.scope.showHint("HINT: Select a note to see the linked notes beneath it.");
+    else if (! memo.userProgress) {
+      args.scope.showHint("HINT: Select a lower sentence to see its comments.");
+      memo.userProgress = 1;
+    }
+    else if (memo.userProgress === 1) {
+      args.scope.showHint("You can keep clicking lower comments to go deeper.");
+      memo.userProgress = 2;
+    }
+    else if (memo.userProgress === 2) {
+      args.scope.showHint("You can also click a top sentence to go back.");
+      memo.userProgress = 3;
+    }
   }); // End of getFoci call
 } // End of load function
 

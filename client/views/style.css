@@ -17,10 +17,10 @@ body {
   min-width: 0;
   background: radial-gradient(whitesmoke, gainsboro);  /* whitesmoke, gainsboro, whitesmoke); */
 }
-.formButton:focus {
+.formButton:focus, .tool.active {
   background: radial-gradient(whitesmoke, darkseagreen);
 }
-.formButton:active, .formButton:hover, .formButton.active {
+.formButton:active, .formButton:hover {
   background: linear-gradient(whitesmoke, darkseagreen, whitesmoke);
 }
 .formButtons {
@@ -125,4 +125,16 @@ textarea {
   line-height: 1em;
   margin-top: -5px;
   padding-bottom: 4px;
+}
+.tool {
+  min-width: 0;
+  border-radius: 15px;
+}
+.tool.active {
+  background: radial-gradient(darkseagreen, whitesmoke);
+}
+.tool.active .submit {
+  color: darkgreen;
+}
+.unselected {
 }

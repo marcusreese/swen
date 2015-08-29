@@ -1,7 +1,7 @@
 "use strict";
 var app = angular.module("swen");
 app.controller("RedirectCtrl", ["$location", function($location){
-  $location.path("/mjr:/welcome");
+  $location.path("/dw:/welcome/work-in-progress");
 }]);
 app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
         function($urlRouterProvider, $stateProvider, $locationProvider){
@@ -169,7 +169,7 @@ app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
     })
 */
     // The following seems to have no effect.
-    //$urlRouterProvider.otherwise("/mjr/welcome");
+    //$urlRouterProvider.otherwise("/dw:/welcome/work-in-progress");
         }
 ]);
 

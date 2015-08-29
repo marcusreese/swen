@@ -16,7 +16,7 @@ Iso.insert = function insert(args) {
   // A post needs an id (_id for mongo).
   if (!args.scope.draft.id)
     throw new Error("Cannot insert without id.");
-  newPost._id = "mjr:" + args.scope.draft.id;
+  newPost._id = "demo2015:" + args.scope.draft.id;
 
   // A post needs text.
   if (!args.scope.draft.text)

@@ -11,12 +11,13 @@
       ng-change="change('content', post)"
       ></textarea>
     <md-input-container class="route" >
-    at /mjr:/
+    at /demo2015:/
     <input
       aria-label="editable route"
       style="display: inline-block;"
       class="slug"
       type="text"
+      ng-disabled="form === 'update'"
       ng-model="draft.id"
       ng-change="change('slug', post)" 
     /></md-input-container>

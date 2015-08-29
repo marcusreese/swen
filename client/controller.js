@@ -29,6 +29,9 @@ function($scope, $rootScope, modeService, $mdToast){
     modeService[$scope.mode].click(args);
   }
 
+  var route = location.pathname;
+  if (route.slice(-1) === "-" || route.match(/\/-/))
+    $scope.mode = "edit";
   var load = modeService[$scope.mode].load;
   if (load) load({ scope: $scope, rootScope: $rootScope, route: location.pathname });
 
@@ -66,8 +69,7 @@ function($scope, $rootScope, modeService, $mdToast){
       .hideDelay(7000)
     );
   }
-  $scope.hideHint = function() {
-    console.log('closing hint');
+  $scope.hideHint = function(where) {
     $mdToast.hide();
   }
 

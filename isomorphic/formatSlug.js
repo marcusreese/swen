@@ -22,13 +22,6 @@ Iso.formatSlug = function formatSlug(args, inputKey, outputKey) {
     fixed = fixed.replace(/[^a-z0-9\-]+/g, " ");
     message += " with /" + fixed + ".\n";
   }
-  if (fixed.match(/--+/)) {
-    message += "Multiple hyphens have special meaning in this system.\n";
-    message += "So the system is replacing /" + fixed;
-    //message += "So /example-example/ is okay, but not /example--example/.\n";
-    fixed = fixed.replace(/--+/g, "-");
-    message += " with /" + fixed + ".\n";
-  }
   if (fixed[0] === "-") {
     message += "A beginning hyphen has special meaning in this system.\n";
     message += "So the system is replacing /" + fixed;
@@ -38,9 +31,16 @@ Iso.formatSlug = function formatSlug(args, inputKey, outputKey) {
   }
   if (fixed.slice(-1) === "-") {
     message += "An ending hyphen has special meaning in this system.\n";
+    message += "So /example-example/ is okay, but not /example-example-/.\n";
+    //message += "So the system is replacing /" + fixed;
+    //fixed = fixed.slice(0, -1);
+    //message += " with /" + fixed + ".\n";
+  }
+  if (fixed.match(/--+/)) {
+    message += "Multiple hyphens have special meaning in this system.\n";
     message += "So the system is replacing /" + fixed;
-    //message += "So /example-example/ is okay, but not /example-example-/.\n";
-    fixed = fixed.slice(0, -1);
+    //message += "So /example-example/ is okay, but not /example--example/.\n";
+    fixed = fixed.replace(/--+/g, "-");
     message += " with /" + fixed + ".\n";
   }
   if (fixed.match(/[A-Z]/)) {

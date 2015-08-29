@@ -6,9 +6,8 @@ angular.module("swen").run(["modeService", "$timeout", "$location", "$rootScope"
       $rootScope.header = {
         tools: {
           edit: {
-            text: "EDIT",
             iconClass: "submit",
-            buttonClass: "formButton"
+            buttonClass: "tool"
           }
         }
       };
@@ -18,7 +17,7 @@ angular.module("swen").run(["modeService", "$timeout", "$location", "$rootScope"
 
 
 child: function child(args) {
-  args.scope.hideHint();
+  args.scope.hideHint("childButton");
   // Conclude one update/insert and then begin update/insert of first child.
   var isInsert = args.rootScope.form ? args.rootScope.form !== "update" : false;
   if (isInsert) {
@@ -37,7 +36,7 @@ child: function child(args) {
 },
 
 click: function click(args) {
-  args.scope.hideHint();
+  args.scope.hideHint("clickInEditMode");
   // The scope's mode is already "edit" or we wouldn't be here,
   // but modeService probably doesn't know it yet, and it needs to know
   // because scope.mode is about to be erased when event default happens.
@@ -59,11 +58,16 @@ clickOut: function clickOut(args) {
 },
 
 contentChange: function contentChange(args) {
-  args.scope.hideHint();
   // There was a change in the textarea, so use the new text.
+  var text = args.scope.draft.text;
+  // Temporarily avoiding breaking up long stuff.
+  if (text.length > 200) {
+    args.scope.showHint("Large inputs are not yet supported.\nPlease enter up to one sentence and then click a button.");
+    args.scope.draft.text = text.slice(0,300);
+  }
   // Generate link suggestions and a url if this is an insert.
   if (! args.scope.form || args.scope.form === "update") return;
-  if (! args.scope.draft.text) {
+  if (! text) {
     args.scope.draft.id = ""; 
     return;
   }
@@ -74,7 +78,7 @@ contentChange: function contentChange(args) {
     // Meteor uses EJSON.clone on the args.
     {
       formattedSlug: args.formattedSlug,
-      poster: args.poster || "mjr", //temp
+      poster: args.poster || "demo2015", //temp
     },
     function (err, data) {
       if (err) throw err;
@@ -89,6 +93,19 @@ contentChange: function contentChange(args) {
 },
 
 load: function load(args) {
+  var route = location.pathname;
+  args.rootScope.header.tools.edit.buttonClass += " active";
+  if (route.slice(-2) === "/-")
+    args.scope.form = "firstChild";
+  else if (route.slice(-3) === "/--")
+    args.scope.form = "lastChild";
+  else if (route.match(/\/-[a-z0-9A-Z]/))
+    args.scope.form = "firstSibling";
+  else if (route.slice(-1) === "-")
+    args.scope.form = "nextSibling";
+  else args.scope.form = "update";
+  // Until this system is perfected, it's temporarily using rootScope.
+  args.rootScope.form = args.scope.form;
   // At this point, browse.load needs to run,
   // especially to ensure focus post is in middle subpage,
   // and browse.load uses an async call, so give it a callback.
@@ -97,7 +114,7 @@ load: function load(args) {
 },
 
 save: function save(args) {
-  args.scope.hideHint();
+  args.scope.hideHint("save");
   // Conclude an update/insert and do not start another.
   var isUpdate = args.rootScope.form === "update";
   if (isUpdate) {
@@ -113,7 +130,7 @@ save: function save(args) {
 },
 
 sibling: function sibling(args) {
-  args.scope.hideHint();
+  args.scope.hideHint("continueButton");
   // Conclude one update/insert and then begin update/insert of next sibling.
   var isInsert = args.rootScope.form ? args.rootScope.form !== "update" : false;
   if (isInsert) {
@@ -139,7 +156,7 @@ sibling: function sibling(args) {
 },
 
 slugChange: function slugChange(args) {
-  args.scope.hideHint();
+  args.scope.hideHint("slugChange");
   // If the user is manually suggesting a slug, check it and respond.
   /*
   if (memo.slugChangedBySystem) {
@@ -155,7 +172,7 @@ slugChange: function slugChange(args) {
     // Meteor uses EJSON.clone on the args.
     {
       formattedSlug: args.formattedSlug,
-      poster: args.poster || "mjr", //temp
+      poster: args.poster || "demo2015", //temp
       msgToUser:  args.msgToUser
     },
     function (err, data) {
@@ -177,10 +194,10 @@ tool: function tool(args) {
     clear(args);
     return;
   }
-  args.scope.mode = "edit";
-  args.rootScope.header.tools.edit.text = "EDITING";
+  // Temporarily it will edit first child.
   args.rootScope.header.tools.edit.buttonClass += " active";
-  args.scope.showHint("Click a note to edit it.");
+  var parentRoute = args.scope.fociInA[0]._id.replace(/:/, ":/") + "/-";
+  $location.path(parentRoute);  
 }
 
 
@@ -193,7 +210,6 @@ tool: function tool(args) {
       function clear(args) {
         var editable = args.scope.fociInA[1];
         delete args.rootScope.form;
-        args.rootScope.header.tools.edit.text = "EDIT";
         modeService.setCurrentMode("browse");
         if (args.scope.idsA[1] === "-") {
           // New first child form has been up.
@@ -216,7 +232,7 @@ tool: function tool(args) {
           // Restore highlighting.
           args.scope.display[1][editable._id].linkClass = "selected";
           // Restore tool.
-          args.rootScope.header.tools.edit.buttonClass = "formButton";
+          args.rootScope.header.tools.edit.buttonClass = "tool";
           
         }
       }
@@ -240,6 +256,7 @@ tool: function tool(args) {
           // This will be rerun after the data comes in.
           return;
         var editable = Posts.findOne({ _id: args.scope.fociInA[1]._id });
+        args.scope.display[1]["-firstForm"] = {};
         if (args.rootScope.form === "update") {
           // Display the form
           args.scope.display[1][editable._id].isFormShowable = true;
@@ -263,10 +280,13 @@ tool: function tool(args) {
           // And stop highlighting the now previous post.
           args.scope.display[1][editable._id].linkClass = "";
         }
+        else if (args.rootScope.form === "lastChild") {
+          console.log("ready to implement lastChild");
+        }
         // Focus the new textarea.
         $timeout(function setFocus() {
           // Hide the text above the form.
-          editable = editable._id ? editable : {_id: args.scope.idsA[1]};
+          editable = {_id: args.scope.idsA[1]};
           // Panel 0, subpage 1, etc.
           var domId;
           if (args.rootScope.form === "firstChild")
@@ -295,9 +315,20 @@ tool: function tool(args) {
 
       function nextUpdatable(args) {
         // The insert form was blank, so make next sibling editable.
+        var route = "";
         // If no post, this is a firstSibling form marked by "-" in url.
         var nextId = args.post ? args.post.next : args.scope.idsA.pop();
-        if (nextId) {
+        if (nextId === "-") {
+          // This is first child form.
+          // Move to the first existing child.
+          route = Iso.idsToRoute(
+            args.scope.fociInA[0]._id, 
+            args.scope.fociInA[1]._id
+          );
+          args.rootScope.form = "update";
+          $location.path(route);
+        }
+        else if (nextId) {
           if (nextId[0] === "-") nextId = nextId.slice(1);
           args.rootScope.form = "update";
           var route = "";
@@ -332,11 +363,4 @@ tool: function tool(args) {
   } // End of addEdit function
 ]); // End of run function
 
-/*
-// A little algorithm for temp avoiding breaking up long stuff.
-if (input.length > 200) {
-  msgToUser("large input not yet supported");
-  input = input.slice(0,300);
-}
 
-*/
