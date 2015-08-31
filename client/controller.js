@@ -29,10 +29,10 @@ function($scope, $rootScope, modeService, $mdToast){
     modeService[$scope.mode].click(args);
   }
 
-  var route = location.pathname;
-  if (route.slice(-1) === "-" || route.match(/\/-/))
-    $scope.mode = "edit";
-  var load = modeService[$scope.mode].load;
+  if (location.search)
+    // Use the first query parameter as the mode.
+    $scope.mode = location.search.slice(1).match(/^[^=]+/)[0];
+  var load = modeService[$scope.mode] ? modeService[$scope.mode].load : "";
   if (load) load({ scope: $scope, rootScope: $rootScope, route: location.pathname });
 
   $scope.clickOut = function clickOut($event) {
@@ -40,8 +40,8 @@ function($scope, $rootScope, modeService, $mdToast){
     if (clickOut) clickOut({scope: $scope, rootScope: $rootScope, event: $event});
   }
 
-  $scope.tool = function tool($event, mode) {
-    var tool = modeService[mode].tool;
+  $scope.tool = function tool($event, mode, tool) {
+    var tool = modeService[mode][tool + "Tool"];
     if (tool) tool({scope: $scope, rootScope: $rootScope, event: $event});
   }
 

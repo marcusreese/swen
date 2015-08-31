@@ -25,6 +25,27 @@ body {
 }
 .formButtons {
   display: inline-block;
+  float: right;
+}
+h3 {
+  vertical-align: top;
+  display: inline-block;
+  margin-left: -3px;
+  margin-top: 9px;
+}
+.h3first {
+  float: left;
+  vertical-align: top;
+  display: inline-block;
+  font-size: 2.5em;
+  line-height: .8em;
+  background: white;
+  border-radius: 20px;
+  width: 33px;
+  margin-right: 1px;
+}
+#header {
+  background: linear-gradient(white, white, white, rgb(63,81,181), white, white, white);
 }
 html {
   min-height: 100%;
@@ -37,10 +58,17 @@ main {
   max-width: 500px;
   margin: auto;
 }
+.md-button.md-fab .md-icon {
+  margin-top: -4px;
+}
 .md-left.md-right {
   text-align: center;
   max-width: 500px;
   margin: auto;
+}
+md-toast {
+  max-height: 500px;
+  height: auto;
 }
 .outer {
   padding: 10px;
@@ -48,10 +76,12 @@ main {
 }
 .page {
   width: 100%;
+  max-width: 500px;
   padding-left: 2%;
   padding-right: 10%;
   margin-left: -10px;
   margin-right: -10px;
+  margin: auto;
   min-height: 100vh;
 }
 .page:focus, .page:focus:active, .page:active, .page.active {
@@ -62,11 +92,17 @@ main {
 }
 .panel {
 }
+.pencil {
+  margin-top: -4px;
+}
 .post {
 }
 .route {
-  width: 50%;
+  min-width: 10em;
+  font-size: .9em;
+  flex: 1 1 auto;
   display: inline-block;
+  max-width: 100%;
 }
 .scaledDown {
   transform: scale(.95);
@@ -84,7 +120,8 @@ select {
   background: linear-gradient(white, lightcyan, lightcyan, white);
 }
 .slug {
-  max-width: 150px;
+  margin-left: -5px;
+  min-width: 8em;
 }
 .subpage {
   background: white;
@@ -136,5 +173,12 @@ textarea {
 .tool.active .submit {
   color: darkgreen;
 }
+.toolButtons {
+  margin-right: -1em;
+}
 .unselected {
+}
+.update.active {
+  color: blue;
+  background: radial-gradient(white, blue);
 }

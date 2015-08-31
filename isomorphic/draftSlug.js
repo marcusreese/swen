@@ -21,8 +21,11 @@ Iso.draftSlug = function draftSlug(args) {
       if (beforeBiggest === "symbols") beforeBiggest = "";
     }
   }
-  if (beforeBiggest)
+  biggest = biggest.replace(/-$/, "");
+  if (beforeBiggest) {
+    beforeBiggest = beforeBiggest.replace(/-$/, "");
     args.formattedSlug = beforeBiggest + "-" + biggest;
+  }
   else args.formattedSlug = biggest;
   return args.formattedSlug;
 }

@@ -22,6 +22,13 @@ Iso.formatSlug = function formatSlug(args, inputKey, outputKey) {
     fixed = fixed.replace(/[^a-z0-9\-]+/g, " ");
     message += " with /" + fixed + ".\n";
   }
+  if (fixed.match(/--+/)) {
+    message += "Multiple hyphens have special meaning in this system.\n";
+    message += "So the system is replacing /" + fixed;
+    //message += "So /example-example/ is okay, but not /example--example/.\n";
+    fixed = fixed.replace(/--+/g, "-");
+    message += " with /" + fixed + ".\n";
+  }
   if (fixed[0] === "-") {
     message += "A beginning hyphen has special meaning in this system.\n";
     message += "So the system is replacing /" + fixed;
@@ -36,13 +43,6 @@ Iso.formatSlug = function formatSlug(args, inputKey, outputKey) {
     //fixed = fixed.slice(0, -1);
     //message += " with /" + fixed + ".\n";
   }
-  if (fixed.match(/--+/)) {
-    message += "Multiple hyphens have special meaning in this system.\n";
-    message += "So the system is replacing /" + fixed;
-    //message += "So /example-example/ is okay, but not /example--example/.\n";
-    fixed = fixed.replace(/--+/g, "-");
-    message += " with /" + fixed + ".\n";
-  }
   if (fixed.match(/[A-Z]/)) {
     message += "Friendly web addresses generally use lowercase only.\n";
     message += "So the system is replacing /" + fixed;
@@ -56,6 +56,7 @@ Iso.formatSlug = function formatSlug(args, inputKey, outputKey) {
     fixed = "symbols";
     message += " with /" + fixed + ".\n";
   }
+
   args[outputKey] = fixed;
   args.msgToUser = message;
   return fixed;

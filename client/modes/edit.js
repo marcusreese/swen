@@ -1,13 +1,13 @@
 "use strict";
-angular.module("swen").run(["modeService", "$timeout", "$location", "$rootScope",
-  function addEdit(modeService, $timeout, $location, $rootScope) {
+angular.module("swen").run(["modeService", "$timeout", "$location", "$rootScope", "$state",
+  function addEdit(modeService, $timeout, $location, $rootScope, $state) {
     function edit() { 
       var memo = {}, returnable;
       $rootScope.header = {
         tools: {
           edit: {
-            iconClass: "submit",
-            buttonClass: "tool"
+            //iconClass: "pencil",
+            //buttonClass: "tool"
           }
         }
       };
@@ -19,14 +19,15 @@ angular.module("swen").run(["modeService", "$timeout", "$location", "$rootScope"
 child: function child(args) {
   args.scope.hideHint("childButton");
   // Conclude one update/insert and then begin update/insert of first child.
-  var isInsert = args.rootScope.form ? args.rootScope.form !== "update" : false;
+  var isInsert = $location.search().edit !== "update-focus-post";
   if (isInsert) {
     // Concluding an insert.
     if (args.scope.draft.text) {
+      args.formType = $location.search().edit;
       Iso.insert(args);
     }
     // If there's no text, cannot create a child of nothing.
-    else clear(args);
+    else clearForms(args);
   }
   else {
     // Concluding an update.
@@ -37,24 +38,11 @@ child: function child(args) {
 
 click: function click(args) {
   args.scope.hideHint("clickInEditMode");
-  // The scope's mode is already "edit" or we wouldn't be here,
-  // but modeService probably doesn't know it yet, and it needs to know
-  // because scope.mode is about to be erased when event default happens.
-  modeService.setCurrentMode("edit");
-  if (args.post) {
-    args.rootScope.form = "update";
-    // Also, if a post is already the focus,
-    // clicking it will not result in a load, so skip straight to
-    // making it editable.
-    if (location.href === args.event.target.href) {
-      loadForms(args);
-    }
-  }
 },
 
 clickOut: function clickOut(args) {
   var id = args.event.target.id;
-  if (id==="wrapper" || id==="header") clear(args);
+  if (id==="wrapper" || id==="header") clearForms(args);
 },
 
 contentChange: function contentChange(args) {
@@ -66,7 +54,7 @@ contentChange: function contentChange(args) {
     args.scope.draft.text = text.slice(0,300);
   }
   // Generate link suggestions and a url if this is an insert.
-  if (! args.scope.form || args.scope.form === "update") return;
+  if (! $location.search().edit || $location.search().edit === "update-focus-post") return;
   if (! text) {
     args.scope.draft.id = ""; 
     return;
@@ -93,19 +81,8 @@ contentChange: function contentChange(args) {
 },
 
 load: function load(args) {
-  var route = location.pathname;
-  args.rootScope.header.tools.edit.buttonClass += " active";
-  if (route.slice(-2) === "/-")
-    args.scope.form = "firstChild";
-  else if (route.slice(-3) === "/--")
-    args.scope.form = "lastChild";
-  else if (route.match(/\/-[a-z0-9A-Z]/))
-    args.scope.form = "firstSibling";
-  else if (route.slice(-1) === "-")
-    args.scope.form = "nextSibling";
-  else args.scope.form = "update";
-  // Until this system is perfected, it's temporarily using rootScope.
-  args.rootScope.form = args.scope.form;
+  // Give modeService.browse something to put on each href.
+  args.scope.queryString = "edit=update-focus-post";
   // At this point, browse.load needs to run,
   // especially to ensure focus post is in middle subpage,
   // and browse.load uses an async call, so give it a callback.
@@ -116,42 +93,68 @@ load: function load(args) {
 save: function save(args) {
   args.scope.hideHint("save");
   // Conclude an update/insert and do not start another.
-  var isUpdate = args.rootScope.form === "update";
+  var isUpdate = $location.search().edit === "update-focus-post";
   if (isUpdate) {
     update(args);
   }
   else if (args.scope.draft.text) {
+    args.formType = $location.search().edit;
     Iso.insert(args);
   }
   //else
     // Inserting blank? Maybe user meant, "I'm done editing."
     // 
-  clear(args);
+  clearForms(args);
 },
 
 sibling: function sibling(args) {
   args.scope.hideHint("continueButton");
   // Conclude one update/insert and then begin update/insert of next sibling.
-  var isInsert = args.rootScope.form ? args.rootScope.form !== "update" : false;
+  var isInsert = $location.search().edit !== "update-focus-post";
   if (isInsert) {
     // Concluding an insert.
     // If there's text, post it and try inserting a new post.
     if (args.scope.draft.text) {
+      args.formType = $location.search().edit;
       Iso.insert(args);
-      args.rootScope.form = "nextSibling";
-      var idParts = args.newPost._id.split(":");
-      $location.path("/" + idParts[0] + ":/" + idParts[1]);
+      $location.path(Iso.idsToRoute(
+        args.scope.fociInA[0]._id,
+        args.newPost._id 
+      )).search("edit", "draft-next-sibling");
     }
-    // But if no text, try updating next sibling
     else {
-      nextUpdatable(args);
+      // No text, so try updating next sibling
+      // Cases: firstsib(noparent), firstchild(nosib), lastCh, nextSib.
+      var postA = args.scope.fociInA[0],
+          postB = args.scope.fociInA[1],
+          keyA = "_id",
+          keyB = "_id";
+      if ($location.search().edit === "draft-first-sibling") {
+      }
+      else if ($location.search().edit === "draft-next-sibling") {
+        keyB = "next";
+      }
+      else if ($location.search().edit === "draft-first-child") {
+      }
+      else if ($location.search().edit === "draft-last-child") {
+        postB = postA;
+        keyB = "childZ";
+      }
+      $location.path(Iso.idsToRoute(
+        postA[keyA],
+        postB[keyB] 
+      )).search("edit", "update-focus-post");
+      //nextUpdatable(args);
     }
   }
   else {
     // Concluding an update.
     update(args);
-    args.rootScope.form = "nextSibling";
-    nextInsertable(args);
+    $location.path(Iso.idsToRoute(
+      args.scope.fociInA[0]._id,
+      args.scope.fociInA[1]._id 
+    )).search("edit", "draft-next-sibling");
+    //nextInsertable(args);
   }
 },
 
@@ -185,19 +188,18 @@ slugChange: function slugChange(args) {
   );
 },
 
-tool: function tool(args) {
-  // Make it ready to clear().
+updateTool: function updateTool(args) {
+  // Make it ready to clearForms().
   args.scope.display[1]["-firstForm"] = 
     args.scope.display[1]["-firstForm"] || {};
   // Make the tool togglable.
   if (args.scope.mode === "edit") {
-    clear(args);
+    clearForms(args);
     return;
   }
-  // Temporarily it will edit first child.
-  args.rootScope.header.tools.edit.buttonClass += " active";
-  var parentRoute = args.scope.fociInA[0]._id.replace(/:/, ":/") + "/-";
-  $location.path(parentRoute);  
+  //args.rootScope.header.tools.edit.buttonClass += " active";
+  $location.search("edit", "update-focus-post");
+  $state.reload();
 }
 
 
@@ -207,20 +209,32 @@ tool: function tool(args) {
 
       // Helper functions
 
-      function clear(args) {
-        var editable = args.scope.fociInA[1];
-        delete args.rootScope.form;
-        modeService.setCurrentMode("browse");
-        if (args.scope.idsA[1] === "-") {
-          // New first child form has been up.
-          // Whether draft saved or simply clicked out, this works.
-          window.history.back();
+      function clearForms(args) {
+        if ($location.search().edit === "draft-first-child") {
+          // User is giving up on a first child draft.
+          // There may not be siblings, but the parent has been the focus.
+          // So go back to the parent and any grandparent.
+          var route = args.scope.display[0][args.scope.fociInA[0]._id].route;
+          route = route.split("?")[0];
+          $location.search("");
+          $location.path(route); 
         }
         else if (args.newPost) {
-          var idParts = args.newPost._id.split(":");
-          $location.path("/" + idParts[0] + ":/" + idParts[1]);
+          // User has clicked Save, and it wasn't just an update.
+          // So navigate to a never-before-used route.
+          $location.path(Iso.idsToRoute(
+            args.scope.fociInA[0]._id,
+            args.newPost._id
+          )).search("");
         }
         else {
+          // User wants to stay at current location, just stop editing.
+          // So simply remove the query string from the url.
+          $location.search("");
+          $state.reload();
+          // Didn't work:
+          //$location.url($location.$$path);
+          /*
           args.scope.display[1][editable._id].isFormShowable = false;
           args.scope.display[1][editable._id].isEditable = false;
           args.scope.display[1]["-firstForm"].isFormShowable = false;
@@ -229,11 +243,7 @@ tool: function tool(args) {
           if (! args.rootScope.panelA[2].length && args.scope.temp)
             args.rootScope.panelA[2] = JSON.parse(args.scope.temp);
           args.scope.temp = "";
-          // Restore highlighting.
-          args.scope.display[1][editable._id].linkClass = "selected";
-          // Restore tool.
-          args.rootScope.header.tools.edit.buttonClass = "tool";
-          
+          */
         }
       }
 
@@ -247,17 +257,20 @@ tool: function tool(args) {
         var 
           parentId = args.newPost ? args.newPost._id : args.post._id,
           idParts = parentId.split(":");
-        args.rootScope.form = "firstChild";
-        $location.path("/" + idParts[0] + ":/" + idParts[1] + "/-");
+        $location.path(Iso.idsToRoute(
+          args.newPost ? args.newPost._id : args.post._id,
+          "-" 
+        )).search("edit", "draft-first-child");
       }
 
       function loadForms(args) {
+
         if (! args.scope.fociInA)
           // This will be rerun after the data comes in.
           return;
         var editable = Posts.findOne({ _id: args.scope.fociInA[1]._id });
         args.scope.display[1]["-firstForm"] = {};
-        if (args.rootScope.form === "update") {
+        if ($location.search().edit === "update-focus-post") {
           // Display the form
           args.scope.display[1][editable._id].isFormShowable = true;
           // Hide the text above the form.
@@ -267,21 +280,21 @@ tool: function tool(args) {
           // Show the existing route within the form.
           args.scope.draft.id = editable._id.split(":")[1];
         }
-        else if (args.rootScope.form === "firstChild") {
+        else if ($location.search().edit === "draft-first-child") {
           args.scope.display[1]["-firstForm"].isFormShowable = true;
         }
-        else if (args.rootScope.form === "nextSibling") {
+        else if ($location.search().edit === "draft-next-sibling") {
           args.scope.display[1][editable._id].isFormShowable = true;
         }
-        else if (args.rootScope.form === "firstSibling") {
+        else if ($location.search().edit === "draft-first-sibling") {
           args.scope.display[1]["-firstForm"].isFormShowable = true;
           // There are no children of a blank form, so show none.
           args.rootScope.panelA[2] = [];
           // And stop highlighting the now previous post.
           args.scope.display[1][editable._id].linkClass = "";
         }
-        else if (args.rootScope.form === "lastChild") {
-          console.log("ready to implement lastChild");
+        else if ($location.search().edit === "draft-last-child") {
+          console.log("ready to implement draft-last-child");
         }
         // Focus the new textarea.
         $timeout(function setFocus() {
@@ -289,7 +302,7 @@ tool: function tool(args) {
           editable = {_id: args.scope.idsA[1]};
           // Panel 0, subpage 1, etc.
           var domId;
-          if (args.rootScope.form === "firstChild")
+          if ($location.search().edit === "draft-first-child")
             // Temporarily working id:
             domId = "0___textarea";
           else domId = "0_1_" + editable._id + "_textarea";
@@ -298,6 +311,7 @@ tool: function tool(args) {
         });
       }
 
+/*
       function nextInsertable(args) {
         // This was update or successful insert, so allow new insert.
         // Display what's been in the form above the form now.
@@ -312,25 +326,22 @@ tool: function tool(args) {
         args.scope.draft.text = "";
         args.scope.draft.id = "";
       }
-
       function nextUpdatable(args) {
-        // The insert form was blank, so make next sibling editable.
-        var route = "";
-        // If no post, this is a firstSibling form marked by "-" in url.
-        var nextId = args.post ? args.post.next : args.scope.idsA.pop();
+        // Continue from blank insert form, so make next sibling editable.
+        // Cases: firstsib(noparent), firstchild(nosib), lastCh, nextSib.
+        // If no post, this is a draft-first-sibling 
+        var nextId = args.post ? args.post.next : args.scope.fociInA[0].childA;
         if (nextId === "-") {
           // This is first child form.
           // Move to the first existing child.
-          route = Iso.idsToRoute(
+          $location.path(Iso.idsToRoute(
             args.scope.fociInA[0]._id, 
-            args.scope.fociInA[1]._id
-          );
-          args.rootScope.form = "update";
-          $location.path(route);
+            args.scope.fociInA[1]._id 
+          )).search("edit", "update-focus-post");
         }
         else if (nextId) {
           if (nextId[0] === "-") nextId = nextId.slice(1);
-          args.rootScope.form = "update";
+          //args.rootScope.form = "update-focus-post";
           var route = "";
           if (args.scope.display[1][nextId])
             route = args.scope.display[1][nextId].route;
@@ -340,7 +351,7 @@ tool: function tool(args) {
         }
         else {
           // But if there is no next sibling, try insert before first.
-          args.rootScope.form = "firstSibling";
+          //args.rootScope.form = "draft-first-sibling";
           var route = args.scope.display[1][args.post.pack].route.split("/"),
               last = route.pop();
           last = "-" + last;
@@ -348,7 +359,7 @@ tool: function tool(args) {
           $location.path(route);
         }
       }
-
+*/
       function update(args) {
         // Take text from textarea. (TODO: Remove post if blank.)
         args.post.text = args.scope.draft.text || args.post.text;

@@ -44,12 +44,15 @@ load: function load(args) {
     // Load each subpage with its generation's pack (near siblings).
     for (var subpageIndex in args.scope.fociInA) {
       var focusPost = args.scope.fociInA[subpageIndex],
-          panel = args.rootScope.panelA;
+          panel = args.rootScope.panelA,
+          query = {};
+      if (subpageIndex === "0")
+        query._id = focusPost._id;
+      else query.pack = focusPost.pack;
       panel[subpageIndex] = $meteor.collection(function() {
-        var pack = focusPost.pack;
         // Load a reactive pack of siblings in the subpage.
         return Posts.find(
-          { pack: pack },
+          query,
           // Sort them by their negative ranks.
           { sort: { rank: -1 }}
         ); // End of what's returned to $meteor.collection;
@@ -61,8 +64,11 @@ load: function load(args) {
         if (! args.scope.display[subpageIndex][post._id])
           args.scope.display[subpageIndex][post._id] = {};
         var displayScope =  args.scope.display[subpageIndex][post._id];
-        displayScope.linkClass = post._id === focusPost._id ? "selected" : "";
-        if (subpageIndex == 2) displayScope.linkClass = "";
+        if (subpageIndex === "0")
+          displayScope.linkClass = "parent";
+        else if (subpageIndex === "1")
+          displayScope.linkClass = post._id === focusPost._id ? "selected" : "unselected";
+        else if (subpageIndex === "2") displayScope.linkClass = "child";
         displayScope.route = getRoute({
           post: post, 
           scope: args.scope, 
@@ -122,6 +128,7 @@ function getRoute(args) {
     route = "/" + parentSection + "/" + childSection;
   else
     route = "/" + childSection;
+  if (args.scope.queryString) route += "?" + args.scope.queryString;
   return route;
 }
 

@@ -17,14 +17,15 @@
       style="display: inline-block;"
       class="slug"
       type="text"
-      ng-disabled="form === 'update'"
+      ng-disabled="draft.id === post._id.split(':')[1]"
       ng-model="draft.id"
       ng-change="change('slug', post)" 
     /></md-input-container>
     <div class="formButtons">
       <md-button tabindex=0 
-        aria-label="save changes and begin adding sibling note"
+        aria-label="save changes and begin adding a sibling note"
         class="formButton"
+        ng-disabled="(! fociInA[1] && ! draft.id) || (! post.next && ! draft.id)"
         ng-click="button(post, subpage, $event, subpageIndex, 'sibling')">
           <md-icon class="tight submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
           <md-icon class="submit" md-svg-icon="content:ic_add_circle_24px"></md-icon>
@@ -34,6 +35,7 @@
         aria-label="save changes and begin adding child note"
         class="formButton"
         tabindex=0
+        ng-disabled="! draft.text"
         ng-click="button(post, subpage, $event, subpageIndex, 'child')">
           <md-icon class="tight submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
          
@@ -45,7 +47,8 @@
       <md-button 
         aria-label="save changes and stop editing"
         class="formButton"
-      tabindex=0 
+        ng-disabled="! draft.id"
+        tabindex=0
         ng-click="button(post, subpage, $event, subpageIndex, 'save')">
           <md-icon class="submit" md-svg-icon="action:ic_check_circle_24px"></md-icon>
           <div class="tiny">SAVE</div>

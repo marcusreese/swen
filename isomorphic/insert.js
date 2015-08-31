@@ -9,9 +9,9 @@ Iso.insert = function insert(args) {
     // 1) as the next sibling after args.post
     // 2) as the first sibling in the pack of args.post
     // 3) as the first child of args.post
-    nextSibling = args.rootScope.form === "nextSibling",
-    firstSibling = args.rootScope.form === "firstSibling",
-    firstChild = args.rootScope.form === "firstChild";
+    nextSibling = args.formType === "draft-next-sibling",
+    firstSibling = args.formType === "draft-first-sibling",
+    firstChild = args.formType === "draft-first-child";
 
   // A post needs an id (_id for mongo).
   if (!args.scope.draft.id)

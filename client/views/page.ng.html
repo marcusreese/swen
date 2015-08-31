@@ -2,20 +2,31 @@
   <header
     id="header"
     layout="row"
-    layout-align="space-around center">
-      <h3><a href="/">Datawebber</a></h3>
-      <div class="formButtons">
+    layout-align="space-between center">
+    <h3><a href="/"><span class="h3first">D</span>atawebber</a></h3>
+      <div class="toolButtons">
         <md-button
-          aria-label="Edit"
-          class="{{header.tools.edit.buttonClass}}"
+          aria-label="Update a post"
+          class="md-fab md-primary md-mini"
           tabindex=0
-          ng-click="tool($event, 'edit')">
+          ng-click="tool($event, 'edit', 'update')">
+            <md-icon
+              style="margin-top: -4px;"
+              md-svg-icon="image:ic_edit_24px">
+            </md-icon>
+            <div class="tiny">{{header.tools.edit.text}}</div>
+        </md-button>
+        <!-- md-button
+          aria-label="Comment"
+          class="{{header.tools.comment.buttonClass}}"
+          tabindex=0
+          ng-click="tool($event, 'edit', 'comment')">
             <md-icon
               class="{{header.tools.edit.iconClass}}"
               md-svg-icon="communication:ic_comment_24px">
             </md-icon>
             <div class="tiny">{{header.tools.edit.text}}</div>
-        </md-button>
+        </md-button -->
       </div>
   </header>
   <!--button ng-click="status()">status</button-->
