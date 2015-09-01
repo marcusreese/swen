@@ -2,7 +2,7 @@
 angular.module("swen").run(["modeService", "$timeout", "$location", "$rootScope", "$state",
   function addEdit(modeService, $timeout, $location, $rootScope, $state) {
     function edit() { 
-      var memo = {}, thisUser = "demo2015", returnable;
+      var memo = {}, thisUser = "demo", returnable;
       $rootScope.header = {
         tools: {
           edit: {
@@ -66,7 +66,7 @@ contentChange: function contentChange(args) {
     // Meteor uses EJSON.clone on the args.
     {
       formattedSlug: args.formattedSlug,
-      poster: args.poster || "demo2015", //temp
+      poster: args.poster || "demo", //temp
     },
     function (err, data) {
       if (err) throw err;
@@ -88,6 +88,12 @@ load: function load(args) {
   // and browse.load uses an async call, so give it a callback.
   args.callback = loadForms;
   modeService.browse.load(args);      
+},
+
+reset: function reset() {
+  Meteor.call("reset", function(err, data) {
+    $location.path("demo:/welcome/in-progress").search("");
+  });
 },
 
 save: function save(args) {

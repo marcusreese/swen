@@ -1,4 +1,8 @@
 <div class="page" id="wrapper" ng-click="clickOut($event)">
+  <div class="reset"
+    ng-click="reset()">
+    RESET
+  </div>
   <header
     id="header"
     layout="row"
@@ -8,10 +12,11 @@
         <md-button
           aria-label="Update a post"
           class="md-fab md-primary md-mini"
+          style="background: green;"
           tabindex=0
           ng-click="tool($event, 'edit', 'update')">
             <md-icon
-              style="margin-top: -4px;"
+            style="margin-top: -4px;"
               md-svg-icon="image:ic_edit_24px">
             </md-icon>
             <div class="tiny">{{header.tools.edit.text}}</div>

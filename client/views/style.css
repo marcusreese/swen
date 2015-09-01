@@ -33,7 +33,11 @@ h3 {
   margin-left: -3px;
   margin-top: 5px;
 }
+h3 a {
+  color: lightgray;
+}
 .h3first {
+  color: lightgray;
   float: left;
   vertical-align: top;
   display: inline-block;
@@ -45,7 +49,8 @@ h3 {
   margin-right: 1px;
 }
 #header {
-  background: linear-gradient(white, white, white, rgb(63,81,181), white, white, white);
+  background: linear-gradient(white, white, white, lightgray, white, white, white);
+  width: 96%;
 }
 html {
   min-height: 100%;
@@ -97,6 +102,13 @@ md-toast {
 }
 .post {
 }
+.reset {
+  width: 100px;
+  margin: auto;
+  font-size: .7em;
+  color: lightgray;
+  cursor: pointer;
+}
 .route {
   min-width: 10em;
   font-size: .9em;
@@ -117,7 +129,6 @@ select {
 }
 .selected {
   background: lightcyan;
-  background: linear-gradient(white, lightcyan, lightcyan, white);
 }
 .slug {
   margin-left: -5px;
@@ -174,7 +185,7 @@ textarea {
   color: darkgreen;
 }
 .toolButtons {
-  margin-right: -1em;
+  margin-right: -.5em;
 }
 .unselected {
 }

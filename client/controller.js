@@ -9,6 +9,10 @@ function($scope, $rootScope, modeService, $mdToast){
 
   //$scope.status = function() {console.log(JSON.stringify(Posts.find().fetch()));}; 
 
+  $scope.reset = function reset() {
+    modeService.edit.reset();
+  }
+
   $scope.mode = modeService.getCurrentMode();
 
   // Prepare a blank draft that can be prepared for the user.

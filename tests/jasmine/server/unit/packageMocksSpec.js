@@ -7086,7 +7086,7 @@ var packageMetadata = {
                 },
                 "version": {
                   "type": "constant",
-                  "value": "058c26688a7e3091e8184198ebc5d25b453e3175"
+                  "value": "e98f73ddd44a1b04f2868a1cc29514f02ebb4708"
                 },
                 "PUBLIC_SETTINGS": {
                   "type": "undefined"
@@ -7210,7 +7210,7 @@ var packageMetadata = {
             },
             "connections": {
               "type": "constant",
-              "value": 0
+              "value": 2
             },
             "timeout": {
               "type": "constant",
@@ -7854,11 +7854,11 @@ var packageMetadata = {
       "members": {
         "autoupdateVersion": {
           "type": "constant",
-          "value": "d16af519b2876245c453ddefb24bef8f11bdff22"
+          "value": "5d8e3f059a25758879eafa4adc546739e5df746c"
         },
         "autoupdateVersionRefreshable": {
           "type": "constant",
-          "value": "4409e50fcab99e4c93b382a1e579c744b7a47c13"
+          "value": "80220108b047dbde7b4ec4fb0f78acbfcb2e9712"
         },
         "autoupdateVersionCordova": {
           "type": "constant",
@@ -8728,7 +8728,7 @@ var packageMetadata = {
                 },
                 "pid": {
                   "type": "constant",
-                  "value": 62583
+                  "value": 66138
                 },
                 "getTaskName": {
                   "type": "function"
