@@ -3,9 +3,19 @@ Iso.repack = function renumber(args) {
   var i = 0,
     packLeader = "",
     prev = "",
-    cursor = Posts.find({ pack: args.newPost.pack }, { sort: { rank: -1 } });
+    pack = args.newPost ? args.newPost.pack : args.deleted.pack,
+    cursor = Posts.find({ pack: pack }, { sort: { rank: -1 } });
+  // Set new focusable if there is a sibling.
+  // First try to give it the id of deleted's next.
+  if (args.deleted && args.deleted.next) args.newFocusId = args.deleted.next;
   cursor.forEach(function (obj) {
-    // Keep count.
+    // In case deleted has no next, find the obj that has deleted as next.
+    if (args.deleted
+      && ! args.newFocusId
+      && obj.next === args.deleted._id) {
+      args.newFocusId = obj._id;
+    }
+    // Keep count of how many child posts, if it's useful.
     i++;
     if (obj.rank > 0) {
       console.log("voting not ready");
@@ -16,9 +26,13 @@ Iso.repack = function renumber(args) {
       return;
     }
     // Set this post as next for previous post.
-    if (prev) Posts.update({ _id: prev }, { $set: { next: obj._id }});
+    if (prev && prev.next !== obj._id) 
+      Posts.update({ _id: prev._id }, { $set: { next: obj._id }});
+    else if (! prev && cursor.count() === 1) 
+      // This is first, and second must be deleted; there is no next.
+      Posts.update({ _id: obj._id }, { $unset: { next: 1 }});
     // Replace previous post with this one.
-    prev = obj._id;
+    prev = obj;
     // The first post is the pack leader.
     if (!packLeader) {
       packLeader = obj._id;

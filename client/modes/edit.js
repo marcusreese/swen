@@ -2,7 +2,7 @@
 angular.module("swen").run(["modeService", "$timeout", "$location", "$rootScope", "$state",
   function addEdit(modeService, $timeout, $location, $rootScope, $state) {
     function edit() { 
-      var memo = {}, returnable;
+      var memo = {}, thisUser = "demo2015", returnable;
       $rootScope.header = {
         tools: {
           edit: {
@@ -27,7 +27,7 @@ child: function child(args) {
       Iso.insert(args);
     }
     // If there's no text, cannot create a child of nothing.
-    else clearForms(args);
+    else clearForm(args);
   }
   else {
     // Concluding an update.
@@ -42,7 +42,7 @@ click: function click(args) {
 
 clickOut: function clickOut(args) {
   var id = args.event.target.id;
-  if (id==="wrapper" || id==="header") clearForms(args);
+  if (id==="wrapper" || id==="header") clearForm(args);
 },
 
 contentChange: function contentChange(args) {
@@ -104,7 +104,7 @@ save: function save(args) {
   //else
     // Inserting blank? Maybe user meant, "I'm done editing."
     // 
-  clearForms(args);
+  clearForm(args);
 },
 
 sibling: function sibling(args) {
@@ -129,13 +129,11 @@ sibling: function sibling(args) {
           postB = args.scope.fociInA[1],
           keyA = "_id",
           keyB = "_id";
-      if ($location.search().edit === "draft-first-sibling") {
-      }
-      else if ($location.search().edit === "draft-next-sibling") {
+      //if ($location.search().edit === "draft-first-sibling")
+      if ($location.search().edit === "draft-next-sibling") {
         keyB = "next";
       }
-      else if ($location.search().edit === "draft-first-child") {
-      }
+      //else if ($location.search().edit === "draft-first-child") 
       else if ($location.search().edit === "draft-last-child") {
         postB = postA;
         keyB = "childZ";
@@ -150,9 +148,11 @@ sibling: function sibling(args) {
   else {
     // Concluding an update.
     update(args);
+    // If the focus post was deleted, try to find another.
+    var focus1 = args.newFocusId ? args.newFocusId : args.scope.fociInA[1]._id;
     $location.path(Iso.idsToRoute(
       args.scope.fociInA[0]._id,
-      args.scope.fociInA[1]._id 
+      focus1
     )).search("edit", "draft-next-sibling");
     //nextInsertable(args);
   }
@@ -175,7 +175,7 @@ slugChange: function slugChange(args) {
     // Meteor uses EJSON.clone on the args.
     {
       formattedSlug: args.formattedSlug,
-      poster: args.poster || "demo2015", //temp
+      poster: args.poster,
       msgToUser:  args.msgToUser
     },
     function (err, data) {
@@ -189,12 +189,12 @@ slugChange: function slugChange(args) {
 },
 
 updateTool: function updateTool(args) {
-  // Make it ready to clearForms().
+  // Make it ready to clearForm().
   args.scope.display[1]["-firstForm"] = 
     args.scope.display[1]["-firstForm"] || {};
   // Make the tool togglable.
   if (args.scope.mode === "edit") {
-    clearForms(args);
+    clearForm(args);
     return;
   }
   //args.rootScope.header.tools.edit.buttonClass += " active";
@@ -209,10 +209,12 @@ updateTool: function updateTool(args) {
 
       // Helper functions
 
-      function clearForms(args) {
-        if ($location.search().edit === "draft-first-child") {
+      function clearForm(args) {
+        if ($location.search().edit === "draft-first-child"
           // User is giving up on a first child draft.
           // There may not be siblings, but the parent has been the focus.
+          || ! args.newFocusId) {
+          // A post was deleted and no sibling was found to take its place.
           // So go back to the parent and any grandparent.
           var route = args.scope.display[0][args.scope.fociInA[0]._id].route;
           route = route.split("?")[0];
@@ -227,23 +229,18 @@ updateTool: function updateTool(args) {
             args.newPost._id
           )).search("");
         }
+        else if (args.newFocusId) {
+          // User has deleted focus post in subpage1.
+          $location.path(Iso.idsToRoute(
+            args.scope.fociInA[0]._id,
+            args.newFocusId
+          )).search("");
+        }  
         else {
           // User wants to stay at current location, just stop editing.
           // So simply remove the query string from the url.
           $location.search("");
           $state.reload();
-          // Didn't work:
-          //$location.url($location.$$path);
-          /*
-          args.scope.display[1][editable._id].isFormShowable = false;
-          args.scope.display[1][editable._id].isEditable = false;
-          args.scope.display[1]["-firstForm"].isFormShowable = false;
-          args.scope.mode = "browse";
-          // Restore any deleted children of focus.
-          if (! args.rootScope.panelA[2].length && args.scope.temp)
-            args.rootScope.panelA[2] = JSON.parse(args.scope.temp);
-          args.scope.temp = "";
-          */
         }
       }
 
@@ -254,9 +251,6 @@ updateTool: function updateTool(args) {
       }
 
       function openChildForm(args) {
-        var 
-          parentId = args.newPost ? args.newPost._id : args.post._id,
-          idParts = parentId.split(":");
         $location.path(Iso.idsToRoute(
           args.newPost ? args.newPost._id : args.post._id,
           "-" 
@@ -269,9 +263,12 @@ updateTool: function updateTool(args) {
           // This will be rerun after the data comes in.
           return;
         var editable = Posts.findOne({ _id: args.scope.fociInA[1]._id });
+        args.scope.poster = thisUser;
         args.scope.display[1]["-firstForm"] = {};
         if ($location.search().edit === "update-focus-post") {
-          // Display the form
+          // Define the poster on the form.
+          args.scope.poster = editable._id.split(":")[0];
+          // Display the form.
           args.scope.display[1][editable._id].isFormShowable = true;
           // Hide the text above the form.
           args.scope.display[1][editable._id].isEditable = true;
@@ -361,10 +358,27 @@ updateTool: function updateTool(args) {
       }
 */
       function update(args) {
-        // Take text from textarea. (TODO: Remove post if blank.)
-        args.post.text = args.scope.draft.text || args.post.text;
-        //before: args.scope.panelA[args.sIndex].save(args.post);
-        args.subpage.save(args.post);
+        if (args.scope.draft.text) {
+          // Take text from textarea.
+          args.post.text = args.scope.draft.text;
+          //before: args.scope.panelA[args.sIndex].save(args.post);
+          args.subpage.save(args.post);
+        }
+        else {
+          // If no children, delete post.
+          if (! args.post.childA) {
+            Iso.deleteOne(args);
+            //args.subpage.remove(args.post);
+            // Notify user.
+            args.scope.showHint("Note deleted.");
+          }
+          else {
+            // Notify user.
+            args.scope.showHint("Cannot delete a note with child notes (yet).");
+            // Clear form.
+            clearForm(args);
+          } // End else children exist
+        } // End else no text
       }
 
 

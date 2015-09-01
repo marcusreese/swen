@@ -107,7 +107,7 @@ Iso.insert = function insert(args) {
   var result = Posts.insert(newPost);
   if (result === newPost._id) {
     args.newPost = newPost;
-    if (newPost.parentA)
+    if (newPost.parentA && (firstSibling || firstChild))
       Posts.update({ _id: newPost.parentA }, { $set: { childA: newPost._id }});
     Iso.repack(args);
   }
