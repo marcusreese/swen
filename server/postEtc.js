@@ -12,6 +12,7 @@ Meteor.publish("postEtc", function (path) {
   // For testing /karma...
   var first6 = path.slice(0,6);
   if (first6 === "/karma") return [];
+  else if (path === "/context.html") return []; // Another Karma thing I guess.
   var ids = Iso.parsePath(path), a = [], packs = [];
   a = getFociAsIfSync(ids);
   if (a === undefined) return [];

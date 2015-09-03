@@ -92,7 +92,7 @@ load: function load(args) {
 
 reset: function reset() {
   Meteor.call("reset", function(err, data) {
-    $location.path("demo:/welcome/in-progress").search("");
+    $location.path("/").search("");
   });
 },
 
@@ -307,7 +307,7 @@ updateTool: function updateTool(args) {
           var domId;
           if ($location.search().edit === "draft-first-child")
             // Temporarily working id:
-            domId = "0___textarea";
+            domId = "0_1__textarea";
           else domId = "0_1_" + editable._id + "_textarea";
           if (document.getElementById(domId))
             document.getElementById(domId).focus();

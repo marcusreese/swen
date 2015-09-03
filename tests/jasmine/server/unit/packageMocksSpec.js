@@ -7086,7 +7086,7 @@ var packageMetadata = {
                 },
                 "version": {
                   "type": "constant",
-                  "value": "e98f73ddd44a1b04f2868a1cc29514f02ebb4708"
+                  "value": "cefcdeacce4ccec35c913761172e2a7c38f1d613"
                 },
                 "PUBLIC_SETTINGS": {
                   "type": "undefined"
@@ -7854,11 +7854,11 @@ var packageMetadata = {
       "members": {
         "autoupdateVersion": {
           "type": "constant",
-          "value": "5d8e3f059a25758879eafa4adc546739e5df746c"
+          "value": "2ecafe4bc3233293c3bfa497cd7e6d88f399be12"
         },
         "autoupdateVersionRefreshable": {
           "type": "constant",
-          "value": "80220108b047dbde7b4ec4fb0f78acbfcb2e9712"
+          "value": "c17d7817643aa01f9f5eb42df62cd32f9a8fe086"
         },
         "autoupdateVersionCordova": {
           "type": "constant",
@@ -7888,6 +7888,25 @@ var packageMetadata = {
         },
         "createAppLogger": {
           "type": "function"
+        }
+      }
+    },
+    "ObjectLogger": {
+      "type": "function",
+      "members": {
+        "prototype": {
+          "type": "object",
+          "members": {
+            "enter": {
+              "type": "function"
+            },
+            "return": {
+              "type": "function"
+            },
+            "bindMethod": {
+              "type": "function"
+            }
+          }
         }
       }
     }
@@ -8226,6 +8245,16 @@ var packageMetadata = {
       }
     }
   },
+  "velocity:source-map-support": {
+    "SourceMapSupport": {
+      "type": "object",
+      "members": {
+        "install": {
+          "type": "function"
+        }
+      }
+    }
+  },
   "sanjo:long-running-child-process": {
     "LongRunningChildProcess": {
       "type": "function",
@@ -8372,6 +8401,9 @@ var packageMetadata = {
     "Velocity": {
       "type": "object",
       "members": {
+        "reusableMirrors": {
+          "type": "array"
+        },
         "startup": {
           "type": "function"
         },
@@ -8399,6 +8431,9 @@ var packageMetadata = {
         "registerTestingFramework": {
           "type": "function"
         },
+        "unregisterTestingFramework": {
+          "type": "function"
+        },
         "onTest": {
           "type": "function"
         },
@@ -8417,11 +8452,11 @@ var packageMetadata = {
         },
         "mirrorMeteorVersion": {
           "type": "constant",
-          "value": "1.1.0.2_3"
+          "value": "1.1.0.3_2"
         },
         "mirrorMeteorRelease": {
           "type": "constant",
-          "value": "velocity:METEOR@1.1.0.2_3"
+          "value": "velocity:METEOR@1.1.0.3_2"
         },
         "mirrorMeteorToolReleaseName": {
           "type": "constant",
@@ -8429,11 +8464,11 @@ var packageMetadata = {
         },
         "mirrorMeteorToolVersion": {
           "type": "constant",
-          "value": "1.1.3_4"
+          "value": "1.1.4_2"
         },
         "mirrorMeteorToolRelease": {
           "type": "constant",
-          "value": "velocity:meteor-tool@1.1.3_4"
+          "value": "velocity:meteor-tool@1.1.4_2"
         }
       }
     },
@@ -8706,6 +8741,9 @@ var packageMetadata = {
         },
         "setConfig": {
           "type": "function"
+        },
+        "getConfigPath": {
+          "type": "function"
         }
       }
     },
@@ -8728,7 +8766,7 @@ var packageMetadata = {
                 },
                 "pid": {
                   "type": "constant",
-                  "value": 66138
+                  "value": 74087
                 },
                 "getTaskName": {
                   "type": "function"
@@ -8791,10 +8829,14 @@ var packageMetadata = {
       "members": {
         "onTest": {
           "type": "function"
+        },
+        "setKarmaConfig": {
+          "type": "function"
         }
       }
     }
   },
+  "grigio:babel": {},
   "velocity:html-reporter": {},
   "meteorhacks:inject-data": {
     "InjectData": {
@@ -9006,7 +9048,31 @@ var packageMetadata = {
     "FastRender": {
       "type": "object",
       "members": {
+        "frContext": {
+          "type": "object",
+          "members": {
+            "slot": {
+              "type": "constant",
+              "value": 3
+            },
+            "get": {
+              "type": "function"
+            },
+            "getOrNullIfOutsideFiber": {
+              "type": "function"
+            },
+            "withValue": {
+              "type": "function"
+            }
+          }
+        },
         "route": {
+          "type": "function"
+        },
+        "handleRoute": {
+          "type": "function"
+        },
+        "handleOnAllRoutes": {
           "type": "function"
         },
         "onAllRoutes": {

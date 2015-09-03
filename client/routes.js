@@ -1,7 +1,7 @@
 "use strict";
 var app = angular.module("swen");
 app.controller("RedirectCtrl", ["$location", function($location){
-  $location.path("/dw:/welcome/work-in-progress");
+  $location.path("/demo:/welcome/in-progress");
 }]);
 app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
         function($urlRouterProvider, $stateProvider, $locationProvider){
@@ -61,8 +61,9 @@ app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
         },
       }
     }) // End of normal state
-    // The following seems to have no effect; probably should be "/".
-    //$urlRouterProvider.otherwise("/dw:/welcome/work-in-progress");
+    // For the following to work, I need to define the exact
+    // route here as a state (to join 'root' and 'normal').
+    //$urlRouterProvider.otherwise("/demo:/search/?");
         }
 ]);
 

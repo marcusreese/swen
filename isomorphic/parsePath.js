@@ -17,6 +17,10 @@ Iso.parsePath = function parsePath(path) {
     console.log("detected karma");
     segments = ["karma:","debug.html"];
   }
+  else if (path === "context.html") {
+    console.log("detected something");
+    segments = ["karma:","context.html"];
+  }
   // Use ":/" to mark the end of the poster's username, to allow
   // user-friendly urls that are not strict about number of slashes.
   else if (
