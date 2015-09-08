@@ -205,7 +205,9 @@ updateTool: function updateTool(args) {
   }
   //args.rootScope.header.tools.edit.buttonClass += " active";
   $location.search("edit", "update-focus-post");
-  $state.reload();
+  // At some point, the line above stopped working, so adding this one:
+  //location.search = "?edit=update-focus-post";
+  //$state.reload();
 }
 
 
