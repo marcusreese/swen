@@ -9,9 +9,19 @@
     layout-align="space-between center">
     <h3><a href="/"><span class="h3first">D</span>atawebber</a></h3>
       <div class="toolButtons">
+        <!-- md-button
+          aria-label="Search"
+          class="md-fab md-primary md-mini"
+          tabindex=0
+          ng-click="tool($event, 'edit', 'update')">
+            <md-icon
+            style="margin-top: -4px;"
+              md-svg-icon="action:ic_search_24px">
+            </md-icon>
+        </md-button -->
         <md-button
           aria-label="Update a post"
-          class="md-fab md-primary md-mini"
+          class="md-fab md-mini"
           style="background: green;"
           tabindex=0
           ng-click="tool($event, 'edit', 'update')">
@@ -19,7 +29,6 @@
             style="margin-top: -4px;"
               md-svg-icon="image:ic_edit_24px">
             </md-icon>
-            <div class="tiny">{{header.tools.edit.text}}</div>
         </md-button>
         <!-- md-button
           aria-label="Comment"
@@ -33,6 +42,7 @@
             <div class="tiny">{{header.tools.edit.text}}</div>
         </md-button -->
       </div>
+      <!--input type="text" style="display:block;float:right;clear:both;" /-->
   </header>
   <!--button ng-click="status()">status</button-->
 <main>

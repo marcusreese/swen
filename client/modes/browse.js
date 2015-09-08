@@ -1,7 +1,8 @@
 "use strict";
-angular.module("swen").run(["modeService", "$meteor", "$location", 
-  function addBrowse(modeService, $meteor, $location) { 
+angular.module("swen").run(["modeService", "$meteor", "$location", "$timeout",
+  function addBrowse(modeService, $meteor, $location, $timeout) { 
     function browse () {
+      $meteor.subscribe('postEtc', $location.$$path);
       var viewedParents = {},
           memo = {},
           returnable = {
@@ -33,9 +34,7 @@ load: function load(args) {
   args.scope.display = {0: {}, 1: {}, 2: {}};
  
   // Get the parent's siblings, child's siblings, and grandchildren.
-  Meteor.call("getFoci", args.scope.idsA, function(err, data) {
-    if (err) throw err;
-    args.scope.fociInA = data;
+    var data = args.scope.fociInA = Iso.getFoci(args.scope.idsA);
     // Save child-parent relationship for a form of back navigation.
     if (data) viewedParents[data[1].pack] = data[0]._id;
     // Let angular base dom on rootScope to prevent flicker.
@@ -74,6 +73,11 @@ load: function load(args) {
           scope: args.scope, 
           sIndex: subpageIndex
         });
+        (function presubOuter(route) {
+          $timeout(function presubscribe() {
+            $meteor.subscribe("postEtc", route);
+          });
+        })(displayScope.route);
       }
     } // End of looping through the focus posts for each generation.
     // Allow decorator modules to build on this load function.
@@ -90,7 +94,7 @@ load: function load(args) {
       args.scope.showHint("You can also click a top sentence to go back.");
       memo.userProgress = 3;
     }
-  }); // End of getFoci call
+//  }); // End of getFoci call
 } // End of load function
 
 }; // End of returnable

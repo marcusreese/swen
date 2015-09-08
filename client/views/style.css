@@ -3,6 +3,9 @@ a {
   color: black;
   white-space: pre-line;
 }
+a:active {
+  background: lightcyan;
+}
 body {
 /*  background: #dcdddd;*/
   margin: 0;
@@ -89,7 +92,7 @@ md-toast {
   margin: auto;
   min-height: 100vh;
 }
-.page:focus, .page:focus:active, .page:active, .page.active {
+.page:focus, .page:focus:active, .page:active, .page.active, a:focus {
   background-image: none;
   outline: 0;
   -webkit-box-shadow: none;
@@ -140,13 +143,6 @@ select {
   padding: 10px;
   border-top: 1px solid lightgray;
   box-shadow: none;
-/*
-  transform: rotateX(-5deg);
-  box-shadow: 
-    0px -3px 1px -2px rgba(0, 0, 0, 0.14), 
-    0px -2px 2px 0px rgba(0, 0, 0, 0.098), 
-    0px -1px 5px 0px rgba(0, 0, 0, 0.084);
-*/
 }
 .subpage0 {
   transform: scale(1.5, 1.5);

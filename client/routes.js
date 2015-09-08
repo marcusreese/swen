@@ -19,6 +19,7 @@ app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
     .state("normal", {
       controller: "Controller",
       templateUrl: "client/views/page.ng.html",
+/*
       resolve: {
         'subscribe': [
           '$meteor', function($meteor) {
@@ -26,6 +27,7 @@ app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
           }
         ]
       },
+*/
       url: "/:segment0/:segment1/:segment2/:segment3/:segment4/:segment5/:segment6?edit",
 
       params: {

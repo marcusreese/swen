@@ -13,6 +13,23 @@ function($scope, $rootScope, modeService, $mdToast){
     modeService.edit.reset();
   }
 
+  $scope.msgToUser = "";
+  $rootScope.hints = $rootScope.hints || {};
+  $scope.showHint = function(message) {
+    if (! message) alert("no message");
+    if ($rootScope.hints[message]) return;
+    $rootScope.hints[message] = true;
+    $mdToast.show(
+      $mdToast.simple()
+      .content(message)
+      .position("bottom left right")
+      .hideDelay(7000)
+    );
+  }
+  $scope.hideHint = function(where) {
+    $mdToast.hide();
+  }
+
   $scope.mode = modeService.getCurrentMode();
 
   // Prepare a blank draft that can be prepared for the user.
@@ -25,10 +42,6 @@ function($scope, $rootScope, modeService, $mdToast){
   }
 
   $scope.click = function click(post, $event, subpageIndex) {
-    if (! $event) {
-      // Initial load
-      $rootScope.loaded = true;
-    }
     var args = {post: post, event: $event, rootScope: $rootScope, scope: $scope, subpageIndex: subpageIndex};
     modeService[$scope.mode].click(args);
   }
@@ -58,23 +71,6 @@ function($scope, $rootScope, modeService, $mdToast){
       subpageIndex: subpageIndex,
       rootScope: $rootScope
     });
-  }
-
-  $scope.msgToUser = "";
-  $rootScope.hints = $rootScope.hints || {};
-  $scope.showHint = function(message) {
-    if (! message) alert("no message");
-    if ($rootScope.hints[message]) return;
-    $rootScope.hints[message] = true;
-    $mdToast.show(
-      $mdToast.simple()
-      .content(message)
-      .position("bottom left right")
-      .hideDelay(7000)
-    );
-  }
-  $scope.hideHint = function(where) {
-    $mdToast.hide();
   }
 
 }]);

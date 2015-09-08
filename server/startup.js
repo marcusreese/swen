@@ -17,7 +17,7 @@ Meteor.startup(function () {
     });
     Posts.insert({
       _id: "demo:in-progress",
-      text: "At the moment, this is just a demo of a work in progress.",
+      text: "At the moment, this is actually a demo of a work in progress.",
       rank: -10,
       when: Date.now(),
       parentA: "demo:welcome",
