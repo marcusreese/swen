@@ -38,8 +38,10 @@ h3 {
 }
 h3 a {
   color: lightgray;
+  z-index: 2;
 }
 .h3first {
+  z-index: 2;
   color: lightgray;
   float: left;
   vertical-align: top;
@@ -52,8 +54,27 @@ h3 a {
   margin-right: 1px;
 }
 #header {
+  /*
   background: linear-gradient(white, white, white, lightgray, white, white, white);
+  */
   width: 96%;
+  position: relative;
+}
+#headerB {
+  position: absolute;
+  top: 25px;
+  width: 100%;
+}
+#headerB .space {
+  display: inline-block;
+  width: 26px;
+}
+#headerB .hr {
+  display: inline-block;
+  width: 85%;
+  height: 2px;
+  background: lightgray;
+  vertical-align: top;
 }
 html {
   min-height: 100%;
@@ -126,6 +147,10 @@ md-toast {
   transform: scale(1.05);
   border: 0;
 }
+.searchInput {
+  vertical-align: middle;
+  margin-top: 2px;
+}
 select {
   font-family: RobotoDraft, Roboto, 'Helvetica Neue', sans-serif;
   font-size: 100%;
@@ -182,6 +207,8 @@ textarea {
 }
 .toolButtons {
   margin-right: -.5em;
+  margin-top: -10px;
+  z-index: 2;
 }
 .unselected {
 }

@@ -46,7 +46,7 @@ describe("In browse mode,", function() {
   });
   it("the current (clicked or loaded) post is marked for highlighting.", function () {
     // i.e., load() selects posts via getClass()
-    var scope = {};
+    var scope = {showHint: function(){}};
     // args1 is args for load(), args2 is args for getClass()
     var args1 = {scope: scope}, args2 = {scope: scope};
     args1.rootScope = {};
@@ -70,10 +70,10 @@ describe("In browse mode,", function() {
     currentClass = modeService.browse.getClass(args2);
     expect(currentClass).toBe("");
   });
-*/
+
   it("a post is an internal link.", function () {
     // i.e., getRoute() does something.
-    var scope = {};
+    var scope = {showHint: function(){}};
     // args1 is args for load(), args2 is args for getRoute()
     var args1 = {scope: scope}, args2 = {scope: scope};
     args1.rootScope = {};
@@ -95,7 +95,7 @@ describe("In browse mode,", function() {
   });
   it("a post is a link to the last viewed parent.", function () {
     // i.e., getRoute() and load() work together.
-    var scope = {};
+    var scope = {showHint: function(){}};
     // args1 is args for load(), args2 is args for getRoute()
     var args1 = {scope: scope}, args2 = {scope: scope};
     args1.rootScope = {};
@@ -112,4 +112,5 @@ describe("In browse mode,", function() {
     var currentRoute = modeService.browse.getRoute(args2);
     expect(currentRoute).toBe("/tester:/testA/testB");
   });
+*/
 });

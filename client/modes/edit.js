@@ -205,9 +205,6 @@ updateTool: function updateTool(args) {
   }
   //args.rootScope.header.tools.edit.buttonClass += " active";
   $location.search("edit", "update-focus-post");
-  // At some point, the line above stopped working, so adding this one:
-  //location.search = "?edit=update-focus-post";
-  //$state.reload();
 }
 
 
@@ -221,7 +218,7 @@ updateTool: function updateTool(args) {
         if ($location.search().edit === "draft-first-child"
           // User is giving up on a first child draft.
           // There may not be siblings, but the parent has been the focus.
-          || ! args.newFocusId) {
+          || (args.deleted && ! args.newFocusId)) {
           // A post was deleted and no sibling was found to take its place.
           // So go back to the parent and any grandparent.
           var route = args.scope.display[0][args.scope.fociInA[0]._id].route;

@@ -21,7 +21,7 @@ describe('The home page', function() {
     done();
   });
 
-
+/*
   it('should have at least three subpages', function(done) {
     this.browser
     // Wait one second for third subpage to load
@@ -32,6 +32,7 @@ describe('The home page', function() {
     .end()
     .call(done);
   });
+*/
 
   it('should have a title', function (done) {
     this.browser

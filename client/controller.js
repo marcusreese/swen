@@ -57,8 +57,8 @@ function($scope, $rootScope, modeService, $mdToast){
     if (clickOut) clickOut({scope: $scope, rootScope: $rootScope, event: $event});
   }
 
-  $scope.tool = function tool($event, mode, tool) {
-    var tool = modeService[mode][tool + "Tool"];
+  $scope.tool = function tool($event, mode, theTool) {
+    var tool = modeService[mode][theTool + "Tool"];
     if (tool) tool({scope: $scope, rootScope: $rootScope, event: $event});
   }
 

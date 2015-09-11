@@ -1,7 +1,12 @@
-// browseIntegrationSpec.js
+// /tests/jasmine/client/integration/browseIntegrationSpec.js
 "use strict";
 describe("When page is loaded,", function(done) {
-  it("the default route is '/dw:/welcome/work-in-progress'.", function() {
-    expect(location.pathname).toBe("/dw:/welcome/work-in-progress");
+  beforeEach(module("swen"));
+  var modeService = {};
+  beforeEach(inject(function (_modeService_) {
+          modeService = _modeService_;
+  }));
+  it("the default route is '/demo:/welcome/in-progress'.", function() {
+    expect(location.pathname).toBe("/demo:/welcome/in-progress");
   });
 });

@@ -7,9 +7,14 @@
     id="header"
     layout="row"
     layout-align="space-between center">
+    <div id="headerB">
+      <span class="space">&nbsp;</span>
+      <span class="hr">&nbsp;</span>
+    </div>
     <h3><a href="/"><span class="h3first">D</span>atawebber</a></h3>
       <div class="toolButtons">
-        <!-- md-button
+      <input type="text" class="searchInput" />
+        <md-button
           aria-label="Search"
           class="md-fab md-primary md-mini"
           tabindex=0
@@ -18,7 +23,7 @@
             style="margin-top: -4px;"
               md-svg-icon="action:ic_search_24px">
             </md-icon>
-        </md-button -->
+        </md-button>
         <md-button
           aria-label="Update a post"
           class="md-fab md-mini"
@@ -42,7 +47,6 @@
             <div class="tiny">{{header.tools.edit.text}}</div>
         </md-button -->
       </div>
-      <!--input type="text" style="display:block;float:right;clear:both;" /-->
   </header>
   <!--button ng-click="status()">status</button-->
 <main>

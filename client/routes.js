@@ -20,6 +20,8 @@ app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
       controller: "Controller",
       templateUrl: "client/views/page.ng.html",
 /*
+ * The following seemed to slow us down at one point:
+ *
       resolve: {
         'subscribe': [
           '$meteor', function($meteor) {

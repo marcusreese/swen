@@ -7085,7 +7085,7 @@ var packageMetadata = {
                 },
                 "version": {
                   "type": "constant",
-                  "value": "59c13bf5151e713d9e229b376df2637e9593e9de"
+                  "value": "e4614f77741a27c12df77b4091a470ebb50e0a04"
                 },
                 "PUBLIC_SETTINGS": {
                   "type": "undefined"
@@ -7853,11 +7853,11 @@ var packageMetadata = {
       "members": {
         "autoupdateVersion": {
           "type": "constant",
-          "value": "6f61188edb6efa48b42c5b936377ab168fac1eb4"
+          "value": "e3661fe203c595989706a3ebde32d5ea1703deaa"
         },
         "autoupdateVersionRefreshable": {
           "type": "constant",
-          "value": "c17d7817643aa01f9f5eb42df62cd32f9a8fe086"
+          "value": "4c5716e3794faab2d3f6c071972901bfa7450ca1"
         },
         "autoupdateVersionCordova": {
           "type": "constant",
@@ -7873,7 +7873,6 @@ var packageMetadata = {
   "meteor-platform": {},
   "urigo:angular": {},
   "angularui:angular-ui-router": {},
-  "angular:angular-mocks": {},
   "coffeescript": {},
   "practicalmeteor:loglevel": {
     "loglevel": {
@@ -8765,7 +8764,84 @@ var packageMetadata = {
                 },
                 "pid": {
                   "type": "constant",
-                  "value": 79296
+                  "value": 87372
+                },
+                "fout": {
+                  "type": "constant",
+                  "value": 30
+                },
+                "child": {
+                  "type": "object",
+                  "members": {
+                    "domain": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "signalCode": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "exitCode": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "pid": {
+                      "type": "constant",
+                      "value": 87372
+                    },
+                    "stdin": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "stdout": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "stderr": {
+                      "type": "null",
+                      "value": null
+                    },
+                    "stdio": {
+                      "type": "array"
+                    },
+                    "spawn": {
+                      "type": "function"
+                    },
+                    "kill": {
+                      "type": "function"
+                    },
+                    "ref": {
+                      "type": "function"
+                    },
+                    "unref": {
+                      "type": "function"
+                    },
+                    "setMaxListeners": {
+                      "type": "function"
+                    },
+                    "emit": {
+                      "type": "function"
+                    },
+                    "addListener": {
+                      "type": "function",
+                      "refID": 17
+                    },
+                    "on": {
+                      "ref": 17
+                    },
+                    "once": {
+                      "type": "function"
+                    },
+                    "removeListener": {
+                      "type": "function"
+                    },
+                    "removeAllListeners": {
+                      "type": "function"
+                    },
+                    "listeners": {
+                      "type": "function"
+                    }
+                  }
                 },
                 "getTaskName": {
                   "type": "function"
@@ -9082,6 +9158,7 @@ var packageMetadata = {
   },
   "angular:angular-material": {},
   "planettraining:material-design-icons": {},
+  "angular:angular-mocks": {},
   "session": {},
   "service-configuration": {
     "ServiceConfiguration": {
