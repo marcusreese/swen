@@ -1,5 +1,7 @@
 # Swen
 
+**This implementation was abandoned, though the concept lives on!**
+
 This is currently a simple notes app that provides the benefits of abstraction. Basically, every sentence can have extensive footnotes, and each sentence in the footnotes can have its own footnotes, and each of those can have footnotes, and so on ad infinitum.
 
 #### How To Try It
